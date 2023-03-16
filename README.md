@@ -45,27 +45,6 @@ minkowski() {
 }
 ```
 
-## Variation on BOSL2's antennas example
-
-Taken [from BOSL2's docs](https://github.com/revarbat/BOSL2/wiki/Tutorial-Attachments#diffremove-keep), with extra minkowski.
-
-* `manifold`: 35sec (5.8 cores utilization)
-* `fast-csg`: 6m45sec 
-* *normal*: ?
-
-```js
-include <BOSL2/std.scad>
-minkowski() {
-    diff("dish", keep="antenna")
-        cube(100, center=true)
-            attach([FRONT,TOP], overlap=33) {
-                tag("dish") cylinder(h=33.1, d1=0, d2=95, $fn=100);
-                tag("antenna") cylinder(h=33.1, d=10, $fn=100);
-            }
-    sphere(r=5, $fn=100);
-}
-```
-
 ## Smoothed weird cup using BOSL2 offset3d
 
 * `manifold`: 4sec (2.5 cores utilization)
@@ -107,5 +86,28 @@ minkowski() {
         sphere(r=10);
     }
     sphere(r=5);
+}
+```
+
+## Smooth Antennas
+
+Taken from BOSL's docs
+
+* `manifold`: 35sec (5.8 cores utilization)
+* `fast-csg`: 6m45sec
+* *normal*: ?
+* 
+<img width="542" alt="image" src="https://user-images.githubusercontent.com/273860/225692892-f7be9f4c-bff6-4032-a021-efc930a3882d.png">
+
+```js
+include <BOSL2/std.scad>
+minkowski() {
+    diff("dish", keep="antenna")
+        cube(100, center=true)
+            attach([FRONT,TOP], overlap=33) {
+                tag("dish") cylinder(h=33.1, d1=0, d2=95, $fn=100);
+                tag("antenna") cylinder(h=33.1, d=10, $fn=100);
+            }
+    sphere(r=5, $fn=100);
 }
 ```
