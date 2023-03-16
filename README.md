@@ -64,3 +64,27 @@ offset3d(1)
                 sphere(d=10);
         }
 ```
+
+## Minkowski of minkowski difference!
+
+* `manifold`: 40sec (1.7 cores utilization)
+* `fast-csg`: ? 
+* *normal*: ?
+
+<img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
+
+```js
+include <BOSL2/std.scad>
+$fn=20;
+minkowski() {
+    minkowski_difference() {
+        union() {
+            cylinder(120, d=100, center=true);
+            rotate([90, 0, 0]) cylinder(120, d=70, center=true);
+            rotate([0, 90, 0]) cylinder(120, d=70, center=true);
+        }
+        sphere(r=10);
+    }
+    sphere(r=5);
+}
+```
