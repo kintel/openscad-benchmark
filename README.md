@@ -2,7 +2,18 @@
 
 Examples of rendering times w/ the upcoming Manifold rendering engine support in OpenSCAD (https://github.com/openscad/openscad/pull/4533)
 
-## Box with filleted holes
+For reference: [old benchmarks of fast-csg](https://gist.github.com/ochafik/2db96400e3c1f73558fcede990b8a355), which the Manifold backend might well soon replace!
+
+## General examples
+
+*  [maze.scad](https://www.thingiverse.com/groups/openscad/forums/general/topic:34699):
+    * `manifold`: 4.4sec (1.9 cores utilization)
+    * `fast-csg`: 5min38sec = 338sec (**75x slower**)
+    * *normal*: ? (>10h)
+
+## Minkowski examples
+
+### Box with filleted holes
 
 * `manifold`: 11sec (2.7 cores utilization)
 * `fast-csg`: 1m44sec 
@@ -45,7 +56,7 @@ minkowski() {
 }
 ```
 
-## Smoothed weird cup using BOSL2 offset3d
+### Smoothed weird cup using BOSL2 offset3d
 
 * `manifold`: 4sec (2.5 cores utilization)
 * `fast-csg`: 1m34sec 
@@ -65,7 +76,7 @@ offset3d(1)
         }
 ```
 
-## Smooth Antennas
+### Smooth Antennas
 
 Taken from [BOSL's docs](https://github.com/revarbat/BOSL2/wiki/Tutorial-Attachments#diffremove-keep), with extra minkowski and detail.
 
@@ -88,7 +99,9 @@ minkowski() {
 }
 ```
 
-## Minkowski of minkowski difference!
+### Minkowski of minkowski difference!
+
+This isn't so fast, need to understand why
 
 * `manifold`: 40sec (1.7 cores utilization)
 * `fast-csg`: 42sec (!)
