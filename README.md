@@ -12,6 +12,13 @@ Minkowski operations get a specific boost thanks to the introduction of parallel
     * `manifold`: 4.4sec (1.9 cores utilization)
     * `fast-csg`: 5min38sec = 338sec (**75x slower**)
     * *normal*: ? (>10h)
+*   [menger.scad](https://gist.github.com/thehans/f2bcf3b7d8d5a49378f71e437fa870d0)
+    * `manifold`: 6sec (3.6 cores utilization)
+    * `fast-csg`: 187sec (**30x slower**)
+    * *normal*: ?
+*   `tests/data/scad/issues/issue2342.scad`
+    * `manifold`: 9.2sec
+    * `fast-csg`: 70sec (**7.6x slower**)
 
 ## Minkowski examples
 
