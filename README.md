@@ -6,7 +6,7 @@ Examples of rendering times w/ the upcoming Manifold rendering engine support in
 
 * `manifold`: 11sec (2.7 cores utilization)
 * `fast-csg`: 1m44sec 
-* *normal*: ??
+* *normal*: ?
 
 <img width="675" alt="image" src="https://user-images.githubusercontent.com/273860/225524855-819b52fb-534a-4e63-ab97-74b21cb9893d.png">
 
@@ -69,7 +69,7 @@ offset3d(1)
 
 * `manifold`: 40sec (1.7 cores utilization)
 * `fast-csg`: 42sec (!)
-* *normal*: ?
+* *normal*: 3m43sec
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
 
