@@ -4,9 +4,9 @@ Examples of rendering times w/ the upcoming Manifold rendering engine support in
 
 ## Box with filleted holes
 
-`manifold`: 11sec (2.7 cores utilization)
-`fast-csg`: 1m44sec 
-*normal*: ??
+* `manifold`: 11sec (2.7 cores utilization)
+* `fast-csg`: 1m44sec 
+* *normal*: ??
 
 <img width="675" alt="image" src="https://user-images.githubusercontent.com/273860/225524855-819b52fb-534a-4e63-ab97-74b21cb9893d.png">
 
@@ -43,4 +43,24 @@ minkowski() {
     }
     sphere(smoothRadius, $fn=smoothFn);
 }
+```
+
+## Smoothed weird cup using BOSL2 offset3d
+
+* `manifold`: 4sec (2.5 cores utilization)
+* `fast-csg`: 1m34sec 
+* *normal*: 4m31sec
+
+![image](https://user-images.githubusercontent.com/273860/225525640-b87aba18-10eb-42fb-8fa1-ad0a46590ea3.png)
+
+```js
+include <BOSL2/std.scad>
+$fn=$preview ? 15 : 30;
+offset3d(1)
+    bottom_half()
+        difference() {
+            cube(10, center=true);
+            xscale(0.9) yscale(1.1)
+                sphere(d=10);
+        }
 ```
