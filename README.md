@@ -25,7 +25,7 @@ Minkowski operations get a specific boost thanks to the introduction of parallel
 ### Box with filleted holes
 
 * `manifold`: 11sec (2.7 cores utilization)
-* `fast-csg`: 1m44sec 
+* `fast-csg`: 1m44sec = 104sec (9.4x slower)
 * *normal*: ?
 
 <img width="675" alt="image" src="https://user-images.githubusercontent.com/273860/225524855-819b52fb-534a-4e63-ab97-74b21cb9893d.png">
@@ -68,7 +68,7 @@ minkowski() {
 ### Smoothed weird cup using BOSL2 offset3d
 
 * `manifold`: 4sec (2.5 cores utilization)
-* `fast-csg`: 1m34sec 
+* `fast-csg`: 1m34sec = 94sec (23.5x slower)
 * *normal*: 4m31sec
 
 ![image](https://user-images.githubusercontent.com/273860/225525640-b87aba18-10eb-42fb-8fa1-ad0a46590ea3.png)
@@ -90,7 +90,7 @@ offset3d(1)
 Taken from [BOSL's docs](https://github.com/revarbat/BOSL2/wiki/Tutorial-Attachments#diffremove-keep), with extra minkowski and detail.
 
 * `manifold`: 35sec (5.8 cores utilization)
-* `fast-csg`: 6m45sec
+* `fast-csg`: 6m45sec = 104sec (11.6x slower)
 * *normal*: ?
 * 
 <img width="542" alt="image" src="https://user-images.githubusercontent.com/273860/225692892-f7be9f4c-bff6-4032-a021-efc930a3882d.png">
@@ -113,7 +113,7 @@ minkowski() {
 This isn't so fast, need to understand why
 
 * `manifold`: 40sec (1.7 cores utilization)
-* `fast-csg`: 42sec (!)
+* `fast-csg`: 42sec (! about same speed?!)
 * *normal*: 3m43sec
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
