@@ -68,7 +68,7 @@ offset3d(1)
 ## Minkowski of minkowski difference!
 
 * `manifold`: 40sec (1.7 cores utilization)
-* `fast-csg`: ? 
+* `fast-csg`: 42sec (!)
 * *normal*: ?
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
