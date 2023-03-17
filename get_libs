@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2021 Google LLC.
+# SPDX-License-Identifier: Apache-2.00
 set -euo pipefail
 
 LIBS_DIR=${LIBS_DIR:-$PWD/libs}

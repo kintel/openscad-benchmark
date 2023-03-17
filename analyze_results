@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# Copyright 2021 Google LLC.
+# SPDX-License-Identifier: Apache-2.00
+
 import sys, json
 import itertools
 
@@ -16,6 +19,7 @@ def get_file(r):
     return r["parameters"]["file"]
 def get_mode(r):
     return r["parameters"]["mode"]
+
 def get_result_with_mode(rs, mode):
     matches = list(filter(lambda r: get_mode(r) == mode, rs))
     if len(matches) == 0:
@@ -36,27 +40,3 @@ print('\n\n'.join([
     ]
     if len(list(rs)) == 2
 ]) + '\n')
-
-# {
-#   "results": [
-#     {
-#       "command": "./render.sh manifold 'minbosl.scad'",
-#       "mean": 2.02906278666,
-#       "stddev": null,
-#       "median": 2.02906278666,
-#       "user": 5.29055854,
-#       "system": 0.84655516,
-#       "min": 2.02906278666,
-#       "max": 2.02906278666,
-#       "times": [
-#         2.02906278666
-#       ],
-#       "exit_codes": [
-#         0
-#       ],
-#       "parameters": {
-#         "mode": "manifold"
-#       }
-#     }
-#   ]
-# }

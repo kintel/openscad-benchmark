@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2021 Google LLC.
+# SPDX-License-Identifier: Apache-2.00
 #
 # Usage
 #   ./render (manifold|fastcsg) file.scad [parameter-set-name]
