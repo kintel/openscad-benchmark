@@ -1,0 +1,47 @@
+#!/bin/bash
+set -euo pipefail
+
+LIBS_DIR=${LIBS_DIR:-$PWD/libs}
+
+github_repos=(
+  adrianschlatter/threadlib
+  CarlosGS/Cyclone-PCB-Factory
+  clothbot/ClothBotCreations
+  hyperair/projector-mount
+  JustinSDK/dotSCAD
+  nophead/NopSCADlib
+  ochafik/list-comprehension-demos
+  ochafik/miscellaneous-scad
+  ochafik/Round-Anything
+  ochafik/scad-utils
+  rcolyer/threads-scad
+  revarbat/BOSL2
+  SebiTimeWaster/Chamfers-for-OpenSCAD
+  MoffittLab/OpenSCAD
+  MisterHW/IoP-satellite
+)
+
+symlinks=(
+  # "github.com/rcolyer/threads-scad/threads.scad"
+  "github.com/MoffittLab/OpenSCAD/OpenSCADModules/threads.scad" 
+  "github.com/MisterHW/IoP-satellite/OpenSCAD bottle threads/thread_profile.scad"
+)
+
+echo "# Checking out libraries"
+mkdir -p "$LIBS_DIR"
+cd "$LIBS_DIR"
+
+for github_repo in "${github_repos[@]}" ; do
+  dir="github.com/$github_repo"
+  if [[ -d "$dir" ]]; then
+    ( cd "$dir" ; git pull )
+  else
+    mkdir -p "$( dirname "$dir" )"
+    git clone --depth=1 "https://github.com/$github_repo" "$dir" || true
+  fi
+  ln -sf "$dir" "$( basename "$github_repo" )"
+done
+
+for symlink in "${symlinks[@]}" ; do
+  ln -sf "$symlink" . || true
+done

@@ -9,25 +9,10 @@ export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
 
 LIBS_DIR=${LIBS_DIR:-$PWD/libs}
-export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
+test -d "$LIBS_DIR" || ./get_libs
 
-github_repos=(
-  adrianschlatter/threadlib
-  CarlosGS/Cyclone-PCB-Factory
-  clothbot/ClothBotCreations
-  hyperair/projector-mount
-  JustinSDK/dotSCAD
-  nophead/NopSCADlib
-  ochafik/list-comprehension-demos
-  ochafik/miscellaneous-scad
-  ochafik/Round-Anything
-  ochafik/scad-utils
-  rcolyer/threads-scad
-  revarbat/BOSL2
-  SebiTimeWaster/Chamfers-for-OpenSCAD
-  MoffittLab/OpenSCAD
-  MisterHW/IoP-satellite #/blob/master/OpenSCAD%20bottle%20threads/thread_profile.scad
-)
+# Note: ~/Documents/OpenSCAD/libraries also on path on Mac
+export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
 
 function join_by {
   local IFS="$1"
@@ -35,41 +20,16 @@ function join_by {
   echo "$*"
 }
 
-function checkout_libs() {
-  local dir="$1"
-  # if [[ ! -d "$dir" ]]; then
-    echo "# Checking out libraries"
-    mkdir -p "$dir"
-    (
-      cd "$dir"
-      for github_repo in "${github_repos[@]}" ; do
-        mkdir -p "github.com/$github_repo"
-        git clone https://github.com/$github_repo github.com/$github_repo || true
-        ln -sf "github.com/$github_repo" "$( basename "$github_repo" )"
-      done
-      # ln -sf "github.com/rcolyer/threads-scad/threads.scad" . || true
-      ln -sf "github.com/MoffittLab/OpenSCAD/OpenSCADModules/threads.scad" . || true
-      ln -sf "github.com/MisterHW/IoP-satellite/OpenSCAD bottle threads/thread_profile.scad" . || true
-    )
-  # fi
-}
-# checkout_libs "$LIBS_DIR"
-# checkout_libs ~/Documents/OpenSCAD/libraries
-# exit 1 
-
 function parse_parameter_set_names() {
   python3 -c "import sys, json; print('\n'.join(json.load(sys.stdin)['parameterSets'].keys()))"
 }
 
 files=()
 
-function handle_scad_file() {
-  local scad_file="$1"
-
-  json_file="${scad_file%.scad}.json"
-  
+for scad_file in "$@" ; do
   files+=( "$scad_file" )
 
+  json_file="${scad_file%.scad}.json"
   if [[ -f "$json_file" ]]; then
     set_names="$( cat "$json_file" | parse_parameter_set_names )"
     while IFS= read -r setting
@@ -77,14 +37,7 @@ function handle_scad_file() {
       files+=( "$scad_file:$setting" )
     done <<< "$set_names"
   fi
-}
-
-for scad_file in "$@" ; do
-  handle_scad_file "$scad_file"
 done
-
-
-TIMESTAMP=$( gdate '+%Y%m%d-%H%M' )
 
 if [[ "$#" -eq 1 ]]; then
   OUTPUT_NAME_PREFIX="$( basename "${1%.scad}" )"
@@ -97,6 +50,8 @@ if [[ "${#files[@]}" -eq "$#" ]]; then
 else
   OUTPUT_NAME="${OUTPUT_NAME_PREFIX}-${#files[@]}-variants"
 fi
+
+TIMESTAMP=$( gdate '+%Y%m%d-%H%M' )
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
