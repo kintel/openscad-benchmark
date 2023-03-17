@@ -1,13 +1,14 @@
 #!/bin/bash
 #
 # Usage
-#   ./render.sh (manifold|fastcsg) file.scad [parameter-set-name]
+#   ./render (manifold|fastcsg) file.scad [parameter-set-name]
 #
 set -euo pipefail
 
 MODE="${1:?Mode not set. Pass manifold or fastcsg}"
-INPUT="${2:?Input file not set}"
-PARAM_SET="${3:-}"
+INPUT_AND_PARAM_SET="${2:?Input file not set}"
+INPUT="$( echo "$INPUT_AND_PARAM_SET" | sed -E 's/^(.*):.*$/\1/' )"
+PARAM_SET="$( echo "$INPUT_AND_PARAM_SET" | sed -E 's/^[^:]*:?(.*)$/\1/' )"
 
 OPENSCAD=${OPENSCAD:-$PWD/../openscad2/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
 

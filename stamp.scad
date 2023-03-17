@@ -1,7 +1,7 @@
 // Author: https://github.com/gringer
 // Origin: https://github.com/openscad/openscad/issues/356#issuecomment-29764897
 
-$fn=400;
+$fn=30;
 
 translate([0,0,-2]) minkowski(){
     union(){

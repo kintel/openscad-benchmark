@@ -1,24 +1,41 @@
+#!/usr/bin/python3
 import sys, json
 import itertools
 
-results = json.load(sys.stdin)['results']
+results = []
+
+files = sys.argv[1:]
+if len(files) == 0:
+    results += json.load(sys.stdin)['results']
+else:
+    for file in files:
+        with open(file) as f:
+           results += json.load(f)["results"]
+
 def get_file(r):
     return r["parameters"]["file"]
 def get_mode(r):
     return r["parameters"]["mode"]
 def get_result_with_mode(rs, mode):
-    return filter(rs, lambda r: get_mode(r) == mode)[0]
+    matches = list(filter(lambda r: get_mode(r) == mode, rs))
+    if len(matches) == 0:
+        print(list(rs))
+        raise f'Wat?'
+    return matches[0]
 
 def summarize(file, rs):
     manifold = get_result_with_mode(rs, "manifold")["mean"]
     fastcsg = get_result_with_mode(rs, "fastcsg")["mean"]
-    return f'{file}: Manifold: {manifold}s ({faster}x faster)\nFastCsg: {fastcsg}s'
+    faster = fastcsg / manifold
+    return f'# {file}:\n\tmanifold: {manifold}s ({faster}x faster)\n\tfast-csg: {fastcsg}s'
 
 print('\n\n'.join([
     summarize(file, rs)
-    for file, rs in itertools.groupby(sorted(results, get_file), get_file)
-    if len(rs) == 2
-]))
+    for file, rs in [
+      (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
+    ]
+    if len(list(rs)) == 2
+]) + '\n')
 
 # {
 #   "results": [

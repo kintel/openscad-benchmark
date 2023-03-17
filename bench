@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# s/bench foo.scad
+# ./bench foo.scad
 #
 set -euo pipefail
 
@@ -29,6 +29,12 @@ github_repos=(
   MisterHW/IoP-satellite #/blob/master/OpenSCAD%20bottle%20threads/thread_profile.scad
 )
 
+function join_by {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
 function checkout_libs() {
   local dir="$1"
   # if [[ ! -d "$dir" ]]; then
@@ -55,21 +61,20 @@ function parse_parameter_set_names() {
   python3 -c "import sys, json; print('\n'.join(json.load(sys.stdin)['parameterSets'].keys()))"
 }
 
-commands=()
+files=()
 
 function handle_scad_file() {
   local scad_file="$1"
-  cmdline="s/render {mode} '$scad_file'"
 
   json_file="${scad_file%.scad}.json"
   
-  commands+=( "$cmdline" )  
+  files+=( "$scad_file" )
 
   if [[ -f "$json_file" ]]; then
     set_names="$( cat "$json_file" | parse_parameter_set_names )"
     while IFS= read -r setting
     do
-      commands+=( "$cmdline '$setting'" )  
+      files+=( "$scad_file:$setting" )
     done <<< "$set_names"
   fi
 }
@@ -87,25 +92,25 @@ else
   OUTPUT_NAME_PREFIX="results-$#-files"
 fi
 
-if [[ "${#commands[@]}" -eq "$#" ]]; then
+if [[ "${#files[@]}" -eq "$#" ]]; then
   OUTPUT_NAME="${OUTPUT_NAME_PREFIX}"
 else
-  OUTPUT_NAME="${OUTPUT_NAME_PREFIX}-${#commands[@]}-commands"
+  OUTPUT_NAME="${OUTPUT_NAME_PREFIX}-${#files[@]}-variants"
 fi
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
   -i
   -L mode "manifold,fastcsg"
+  -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
   --export-markdown "$OUTPUT_PREFIX.md"
-  "${commands[@]}"
+  "./render {mode} '{file}'"
 )
 
 echo "# Output will go in $OUTPUT_PREFIX.json"
 
-# for arg in "${hyperfine_args[@]}" ; do
-#   echo "  $arg"
-# done
 hyperfine "${hyperfine_args[@]}"
+
+./analyze_results "$OUTPUT_PREFIX.json"
