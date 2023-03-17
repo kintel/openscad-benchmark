@@ -4,6 +4,7 @@
 
 import sys, json
 import itertools
+from humanfriendly import format_timespan
 
 results = []
 
@@ -27,11 +28,15 @@ def get_result_with_mode(rs, mode):
         raise f'Wat?'
     return matches[0]
 
+def get_cores(r):
+    return (r["user"] + r["system"]) / r["mean"]
+
 def summarize(file, rs):
     manifold = get_result_with_mode(rs, "manifold")["mean"]
+    cores = '%.1f' % get_cores(get_result_with_mode(rs, "manifold"))
     fastcsg = get_result_with_mode(rs, "fastcsg")["mean"]
-    faster = fastcsg / manifold
-    return f'# {file}:\n\tmanifold: {manifold}s ({faster}x faster)\n\tfast-csg: {fastcsg}s'
+    faster = '%.1f' % (fastcsg / manifold)
+    return f'# {file}:\n\tmanifold: {format_timespan(manifold)} ({faster}x faster, {cores} cores)\n\tfast-csg: {format_timespan(fastcsg)}'
 
 print('\n\n'.join([
     summarize(file, rs)
