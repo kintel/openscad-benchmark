@@ -1,0 +1,111 @@
+#!/bin/bash
+#
+# s/bench foo.scad
+#
+set -euo pipefail
+
+RUNS=${RUNS:-1}
+export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
+mkdir -p "$OUTPUT_DIR"
+
+LIBS_DIR=${LIBS_DIR:-$PWD/libs}
+export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
+
+github_repos=(
+  adrianschlatter/threadlib
+  CarlosGS/Cyclone-PCB-Factory
+  clothbot/ClothBotCreations
+  hyperair/projector-mount
+  JustinSDK/dotSCAD
+  nophead/NopSCADlib
+  ochafik/list-comprehension-demos
+  ochafik/miscellaneous-scad
+  ochafik/Round-Anything
+  ochafik/scad-utils
+  rcolyer/threads-scad
+  revarbat/BOSL2
+  SebiTimeWaster/Chamfers-for-OpenSCAD
+  MoffittLab/OpenSCAD
+  MisterHW/IoP-satellite #/blob/master/OpenSCAD%20bottle%20threads/thread_profile.scad
+)
+
+function checkout_libs() {
+  local dir="$1"
+  # if [[ ! -d "$dir" ]]; then
+    echo "# Checking out libraries"
+    mkdir -p "$dir"
+    (
+      cd "$dir"
+      for github_repo in "${github_repos[@]}" ; do
+        mkdir -p "github.com/$github_repo"
+        git clone https://github.com/$github_repo github.com/$github_repo || true
+        ln -sf "github.com/$github_repo" "$( basename "$github_repo" )"
+      done
+      # ln -sf "github.com/rcolyer/threads-scad/threads.scad" . || true
+      ln -sf "github.com/MoffittLab/OpenSCAD/OpenSCADModules/threads.scad" . || true
+      ln -sf "github.com/MisterHW/IoP-satellite/OpenSCAD bottle threads/thread_profile.scad" . || true
+    )
+  # fi
+}
+# checkout_libs "$LIBS_DIR"
+# checkout_libs ~/Documents/OpenSCAD/libraries
+# exit 1 
+
+function parse_parameter_set_names() {
+  python3 -c "import sys, json; print('\n'.join(json.load(sys.stdin)['parameterSets'].keys()))"
+}
+
+commands=()
+
+function handle_scad_file() {
+  local scad_file="$1"
+  cmdline="s/render {mode} '$scad_file'"
+
+  json_file="${scad_file%.scad}.json"
+  
+  commands+=( "$cmdline" )  
+
+  if [[ -f "$json_file" ]]; then
+    set_names="$( cat "$json_file" | parse_parameter_set_names )"
+    while IFS= read -r setting
+    do
+      commands+=( "$cmdline '$setting'" )  
+    done <<< "$set_names"
+  fi
+}
+
+for scad_file in "$@" ; do
+  handle_scad_file "$scad_file"
+done
+
+
+TIMESTAMP=$( gdate '+%Y%m%d-%H%M' )
+
+if [[ "$#" -eq 1 ]]; then
+  OUTPUT_NAME_PREFIX="$( basename "${1%.scad}" )"
+else
+  OUTPUT_NAME_PREFIX="results-$#-files"
+fi
+
+if [[ "${#commands[@]}" -eq "$#" ]]; then
+  OUTPUT_NAME="${OUTPUT_NAME_PREFIX}"
+else
+  OUTPUT_NAME="${OUTPUT_NAME_PREFIX}-${#commands[@]}-commands"
+fi
+OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
+
+hyperfine_args=(
+  -i
+  -L mode "manifold,fastcsg"
+  --runs "$RUNS"
+  --export-json "$OUTPUT_PREFIX.json"
+  --export-markdown "$OUTPUT_PREFIX.md"
+  "${commands[@]}"
+)
+
+echo "# Output will go in $OUTPUT_PREFIX.json"
+
+# for arg in "${hyperfine_args[@]}" ; do
+#   echo "  $arg"
+# done
+hyperfine "${hyperfine_args[@]}"

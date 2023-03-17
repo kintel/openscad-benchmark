@@ -1,0 +1,13 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "ultrafine": {
+            "dishFn": "100",
+            "smoothFn": "100"
+        },
+        "coarse": {
+            "dishFn": "10",
+            "smoothFn": "10"
+        }
+    }
+}

@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Usage
+#   ./render.sh (manifold|fastcsg) file.scad [parameter-set-name]
+#
+set -euo pipefail
+
+MODE="${1:?Mode not set. Pass manifold or fastcsg}"
+INPUT="${2:?Input file not set}"
+PARAM_SET="${3:-}"
+
+OPENSCAD=${OPENSCAD:-$PWD/../openscad2/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
+
+OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
+mkdir -p "$OUTPUT_DIR"
+
+INPUT_NAME=$( basename "$INPUT" )
+OUTPUT_PREFIX="${OUTPUT_DIR}/${INPUT_NAME%.scad}-${MODE}"
+
+ARGS=(
+  "$INPUT"
+  --export-format=binstl
+  -o "$OUTPUT_PREFIX.stl"
+)
+
+if [[ -n "$PARAM_SET" ]]; then
+  ARGS+=(
+    -p "${INPUT%.scad}.json"
+    -P "$PARAM_SET"
+  )
+fi
+
+case "$MODE" in
+  manifold)
+    ARGS+=(
+      "--enable=manifold"
+    )
+    ;;
+  fastcsg)
+    ARGS+=(
+      "--enable=fast-csg"
+      "--enable=fast-csg-exact"
+      "--enable=fast-csg-exact-callbacks"
+      "--enable=fast-csg-remesh"
+      "--enable=fast-csg-trust-corefinement"
+    )
+    ;;
+  *)
+    echo "Invalid mode: $MODE" >&2
+    exit 1
+esac
+
+$OPENSCAD "${ARGS[@]}" | tee "$OUTPUT_PREFIX.log"

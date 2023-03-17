@@ -1,0 +1,71 @@
+#!/bin/bash
+# 
+# Creates JSON parameter sets that can be used to create variations of benchmark tests.
+# Takes a list of OpenSCAD script snippets that each declare a variable's possible values,
+# and generates the JSON param sets that describes the cross product of these values.
+#
+# Usage:
+#   s/gen_param_sets 'N=[2,10]' '$fn=[20,100]' > scalemail.json
+#   s/gen_param_sets 'dishFn=[0:2:10]' 'smoothFn=[10,100,200]'
+#   s/gen_param_sets 'Part=["Head", "Body"]' '$fn=concat(10, [100:100:1000])'
+#
+set -euo pipefail
+
+OPENSCAD=${OPENSCAD:-$PWD/../openscad2/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
+
+function join_by {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
+vars=( "$@" )
+varnames=()
+varpairs=()
+for var in "${vars[@]}" ; do
+  varname="$( echo "$var" | sed -E 's/(.*)=.*/\1/' )"
+  varnames+=( "$varname" )
+  varpairs+=( "[\"$varname\", $varname]" )
+done
+
+script='
+  function join(list, sep, _i=0, _acc="") =
+      _i >= len(list)
+          ? _acc
+          : join(list, sep, _i + 1,
+              str(_i == 0 ? "" : str(_acc, sep), list[_i]));
+
+  function fmt_json_string(v) =
+      str("\"", v, "\"");
+      
+  //function fmt_json_value(v) =
+  //    is_string(v) ? str("\"", v, "\"") : str(v);
+      
+  function fmt_json_object(pairs) =
+      str("{",
+          join([
+              for (pair=pairs)
+                  str(fmt_json_string(pair[0]), ": ", pair[1])
+          ], ","),
+          "}");
+
+  function fmt_json_array(list) =
+      str("[", join(list, ", "), "]");
+
+  echo(
+      fmt_json_object([
+          ["fileFormatVersion", fmt_json_string(1)],
+          ["parameterSets", fmt_json_object([
+              for ('"$( join_by , "${vars[@]}" )"')
+                  let(vars=['"$( join_by , "${varpairs[@]}" )"'])
+                  let(name=join([for (v=vars) str(v[0], "=", v[1])], ", "))
+                  [name, fmt_json_object([for (v=vars) [v[0], fmt_json_string(v[1])]])]
+          ])]
+      ])
+  );
+'
+# echo "$script" >&2
+echo "$script" | \
+  $OPENSCAD - -o - --export-format csg 2>&1 | \
+  sed -E 's/^ECHO: "(.*)"$/\1/' | \
+  python3 -m json.tool
