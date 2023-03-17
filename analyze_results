@@ -8,7 +8,10 @@ from humanfriendly import format_timespan
 
 results = []
 
+# mode = sys.argv[1]
+# files = sys.argv[2:]
 files = sys.argv[1:]
+
 if len(files) == 0:
     results += json.load(sys.stdin)['results']
 else:
@@ -24,24 +27,55 @@ def get_mode(r):
 def get_result_with_mode(rs, mode):
     matches = list(filter(lambda r: get_mode(r) == mode, rs))
     if len(matches) == 0:
-        print(list(rs))
-        raise f'Wat?'
+        return None
     return matches[0]
 
 def get_cores(r):
     return (r["user"] + r["system"]) / r["mean"]
 
-def summarize(file, rs):
-    manifold = get_result_with_mode(rs, "manifold")["mean"]
+def summarize(file, rs, md):
+    manifold = get_result_with_mode(rs, "manifold")
     cores = '%.1f' % get_cores(get_result_with_mode(rs, "manifold"))
-    fastcsg = get_result_with_mode(rs, "fastcsg")["mean"]
-    faster = '%.1f' % (fastcsg / manifold)
-    return f'# {file}:\n\tmanifold: {format_timespan(manifold)} ({faster}x faster, {cores} cores)\n\tfast-csg: {format_timespan(fastcsg)}'
+    fastcsg = get_result_with_mode(rs, "fastcsg")
+    nef = get_result_with_mode(rs, "nef")
+    fastest_other = min(map(lambda x: x["mean"], filter(lambda x: x, [fastcsg, nef])), default=None)
+    faster = ''
+    if fastest_other:
+        faster = '%.1fx' % (fastest_other / manifold["mean"])
 
-print('\n\n'.join([
-    summarize(file, rs)
-    for file, rs in [
-      (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
-    ]
-    if len(list(rs)) == 2
-]) + '\n')
+    manifold_time = format_timespan(manifold["mean"])
+    fastcsg_time = ''
+    if fastcsg:
+        fastcsg_time = format_timespan(fastcsg["mean"])
+    nef_time = ''
+    if nef:
+        nef_time = format_timespan(nef["mean"])
+
+    if md:
+        return f'| {file} | {faster} | {cores} cores | {manifold_time} | {fastcsg_time} | {nef_time} |'
+    else:
+        lines=[
+            f'# {file}',
+            f'\tmanifold: {manifold_time} ({faster} faster, {cores} cores)',
+        ]
+        if fastcsg:
+            lines.append(f'\tfast-csg: {fastcsg_time}')
+        if nef:
+            lines.append(f'\tnef: {nef_time}')
+        return '\n'.join(lines)
+
+data = [
+    (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
+]
+
+# print(data)
+
+# if mode == "md":
+for md in [False, True]:
+    if md:
+        print('')
+        print('| File | Speed-up | CPU utilization | manifold | fast-csg | nef |')
+        print('|:-----|---------:|----------------:|---------:|---------:|----:|')
+        print('\n'.join([summarize(file, rs, md=True) for file, rs in data]) + '\n')
+    else:
+        print('\n\n'.join([summarize(file, rs, md=False) for file, rs in data]) + '\n')

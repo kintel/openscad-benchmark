@@ -13,6 +13,14 @@ mkdir -p "$OUTPUT_DIR"
 LIBS_DIR=${LIBS_DIR:-$PWD/libs}
 test -d "$LIBS_DIR" || ./get_libs
 
+modes=( manifold )
+if [[ "${FASTCSG:-1}" == "1" ]]; then
+  modes+=( fastcsg )
+fi
+if [[ "${NEF:-0}" == "1" ]]; then
+  modes+=( nef )
+fi
+
 # Note: ~/Documents/OpenSCAD/libraries also on path on Mac
 export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
 
@@ -58,11 +66,11 @@ OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
   -i
-  -L mode "manifold,fastcsg"
+  -L mode "$( join_by , "${modes[@]}" )"
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
-  --export-markdown "$OUTPUT_PREFIX.md"
+  # --export-markdown "$OUTPUT_PREFIX.md"
   "./render {mode} '{file}'"
 )
 
@@ -71,3 +79,5 @@ echo "# Output will go in $OUTPUT_PREFIX.json"
 hyperfine "${hyperfine_args[@]}"
 
 ./analyze_results "$OUTPUT_PREFIX.json"
+# ./analyze_results human "$OUTPUT_PREFIX.json"
+# ./analyze_results md "$OUTPUT_PREFIX.json" > $OUTPUT_PREFIX.md

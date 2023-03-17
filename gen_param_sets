@@ -58,7 +58,7 @@ script='
           ["parameterSets", fmt_json_object([
               for ('"$( join_by , "${vars[@]}" )"')
                   let(vars=['"$( join_by , "${varpairs[@]}" )"'])
-                  let(name=join([for (v=vars) str(v[0], "=", v[1])], ", "))
+                  let(name=join([for (v=vars) str(v[0], "=", v[1])], " "))
                   [name, fmt_json_object([for (v=vars) [v[0], fmt_json_string(v[1])]])]
           ])]
       ])

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.00
 #
 # Usage
-#   ./render (manifold|fastcsg) file.scad [parameter-set-name]
+#   ./render (manifold|fastcsg|nef) file.scad [parameter-set-name]
 #
 set -euo pipefail
 
@@ -47,6 +47,8 @@ case "$MODE" in
       "--enable=fast-csg-remesh"
       "--enable=fast-csg-trust-corefinement"
     )
+    ;;
+  nef)
     ;;
   *)
     echo "Invalid mode: $MODE" >&2
