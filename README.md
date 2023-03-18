@@ -75,7 +75,7 @@ These will be picked up automatically by `./bench scalemail.scad`
 | scalemail.scad:N=10 $fn=20 | 15.1x | 2.7 cores | 2.01 seconds | 30.39 seconds |  |
 | scalemail.scad:N=2 $fn=100 | 5.3x | 3.5 cores | 9.25 seconds | 49.12 seconds |  |
 | scalemail.scad:N=2 $fn=20 | 3.5x | 2.3 cores | 0.61 seconds | 2.15 seconds |  |
-| smoothed-antennas.scad |  | 6.0 cores | 38.07 seconds |  |  |
+| smoothed-antennas.scad | 20.5x | 6.0 cores | 38.07 seconds | 13 minutes and 1.15 seconds |  |
 | smoothed-cup.scad | 6.4x | 2.9 cores | 4.42 seconds | 28.5 seconds | 4 minutes and 20.81 seconds |
 
 Notes:
