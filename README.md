@@ -66,7 +66,7 @@ These will be picked up automatically by `./bench scalemail.scad`
 |:-----|---------:|----------------:|---------:|---------:|----:|
 | examples/Parametric/candleStand.scad:small | 32.3x | 2.4 cores | 0.25 seconds | 49.16 seconds | 8.05 seconds |
 | bolts.scad | 8.9x | 1.3 cores | 4.59 seconds | 40.82 seconds |  |
-| box-with-filleted-holes.scad | 9.6x | 2.9 cores | 10.61 seconds | 1 minute and 42.3 seconds |  |
+| box-with-filleted-holes.scad | 9.6x | 2.9 cores | 10.61 seconds | 1 minute and 42.3 seconds | 18 minutes and 52.35 seconds |
 | libs/github.com/rcolyer/threads-scad/threads.scad | 13.1x | 1.5 cores | 1.39 seconds | 18.27 seconds | 1 minute and 9.41 seconds |
 | maze.scad: | 27.7x | 2.6 cores | 3.35 seconds | 5 minutes and 32.25 seconds | too long! |
 | menger.scad | 36.7x | 3.9 cores | 5.08 seconds | 3 minutes and 6.14 seconds | 4 minutes and 53.86 seconds |
@@ -75,6 +75,8 @@ These will be picked up automatically by `./bench scalemail.scad`
 | scalemail.scad:N=10 $fn=20 | 15.1x | 2.7 cores | 2.01 seconds | 30.39 seconds |  |
 | scalemail.scad:N=2 $fn=100 | 5.3x | 3.5 cores | 9.25 seconds | 49.12 seconds |  |
 | scalemail.scad:N=2 $fn=20 | 3.5x | 2.3 cores | 0.61 seconds | 2.15 seconds |  |
+| smoothed-antennas.scad |  | 6.0 cores | 38.07 seconds |  |  |
+| smoothed-cup.scad | 6.4x | 2.9 cores | 4.42 seconds | 28.5 seconds | 4 minutes and 20.81 seconds |
 
 Notes:
 *   Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in the stable releases).
