@@ -66,12 +66,15 @@ These will be picked up automatically by `./bench scalemail.scad`
 
 | File | Speed-up | CPU utilization | manifold | fast-csg | nef |
 |:-----|---------:|----------------:|---------:|---------:|----:|
+| condensed-matter.scad | 8.3x | 2.6 cores | 0.99 seconds | 8.25 seconds |  |
+| condensed-matter.scad:$fn=100 | 19.9x | 3.2 cores | 27.16 seconds | 8 minutes and 59.73 seconds |  |
 | examples/Parametric/candleStand.scad:small | 32.3x | 2.4 cores | 0.25 seconds | **49.16 seconds** | 8.05 seconds |
 | bolts.scad | 8.9x | 1.3 cores | 4.59 seconds | 40.82 seconds |  |
 | box-with-filleted-holes.scad | 9.6x | 2.9 cores | 10.61 seconds | 1 minute and 42.3 seconds | 18 minutes and 52.35 seconds |
 | libs/github.com/rcolyer/threads-scad/threads.scad | 13.1x | 1.5 cores | 1.39 seconds | 18.27 seconds | 1 minute and 9.41 seconds |
 | maze.scad: | 27.7x | 2.6 cores | 3.35 seconds | **5 minutes and 32.25 seconds** | 1 minute and 32.68 seconds |
 | menger.scad | 36.7x | 3.9 cores | 5.08 seconds | 3 minutes and 6.14 seconds | 4 minutes and 53.86 seconds |
+| minkowski-of-minkowski-difference.scad | 1.0 | 1.8 cores | 42.85 seconds | 43.59 seconds | 3 minutes and 34.84 seconds |
 | scalemail.scad | 3.6x | 2.4 cores | 0.61 seconds | 2.17 seconds |  |
 | scalemail.scad:N=10 $fn=100 | 19.8x | 3.1 cores | 20.29 seconds | 6 minutes and 41.64 seconds |  |
 | scalemail.scad:N=10 $fn=20 | 15.1x | 2.7 cores | 2.01 seconds | 30.39 seconds |  |
