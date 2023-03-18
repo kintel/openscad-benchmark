@@ -5,13 +5,13 @@
 # and generates the JSON param sets that describes the cross product of these values.
 #
 # Usage:
-#   s/gen_param_sets 'N=[2,10]' '$fn=[20,100]' > scalemail.json
-#   s/gen_param_sets 'dishFn=[0:2:10]' 'smoothFn=[10,100,200]'
-#   s/gen_param_sets 'Part=["Head", "Body"]' '$fn=concat(10, [100:100:1000])'
+#   ./gen_param_sets 'N=[2,10]' '$fn=[20,100]' > scalemail.json
+#   ./gen_param_sets 'dishFn=[0:2:10]' 'smoothFn=[10,100,200]'
+#   ./gen_param_sets 'Part=["Head", "Body"]' '$fn=concat(10, [100:100:1000])'
 #
 set -euo pipefail
 
-OPENSCAD=${OPENSCAD:-$PWD/../openscad2/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
+OPENSCAD=${OPENSCAD:-$PWD/../openscad1/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
 
 function join_by {
   local IFS="$1"
