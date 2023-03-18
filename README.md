@@ -17,7 +17,9 @@ export OPENSCAD=$PWD/OpenSCAD.app/Contents/MacOS/OpenSCAD
 git clone https://gist.github.com/ochafik/70a6b15e982b7ccd5a79ff9afd99dbcf openscad-manifold-benchmarks
 cd openscad-manifold-benchmarks
 ./get_libs # Will fetch lots of common libs
-./bench *.scad
+
+RUNS=5 ./bench bolts.scad
+# ./bench *.scad 
 ```
 
 Each run outputs a timestamped JSON results file. Multiple files can be merge-analyzed to generate a markdown table and human summary:
@@ -81,6 +83,7 @@ These will be picked up automatically by `./bench scalemail.scad`
 Notes:
 *   Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in the stable releases).
 *   All timings are on a Mac M2 Max. Please let me know if you see significant speedup differences on other platforms.
+*   All timings are on a Mac M2 Max (w/ a single run). Please let me know if you see significant speedup differences on other platforms.
 
 Some screenshots of the associated models (which source is below):
 
