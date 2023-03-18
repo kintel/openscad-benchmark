@@ -66,12 +66,13 @@ These will be picked up automatically by `./bench scalemail.scad`
 
 | File | Speed-up | CPU utilization | manifold | fast-csg | nef |
 |:-----|---------:|----------------:|---------:|---------:|----:|
-| examples/Parametric/candleStand.scad:small | 32.3x | 2.4 cores | 0.25 seconds | 49.16 seconds | 8.05 seconds |
+| examples/Parametric/candleStand.scad:small | 32.3x | 2.4 cores | 0.25 seconds | **49.16 seconds** | 8.05 seconds |
 | bolts.scad | 8.9x | 1.3 cores | 4.59 seconds | 40.82 seconds |  |
 | box-with-filleted-holes.scad | 9.6x | 2.9 cores | 10.61 seconds | 1 minute and 42.3 seconds | 18 minutes and 52.35 seconds |
 | libs/github.com/rcolyer/threads-scad/threads.scad | 13.1x | 1.5 cores | 1.39 seconds | 18.27 seconds | 1 minute and 9.41 seconds |
-| maze.scad: | 27.7x | 2.6 cores | 3.35 seconds | 5 minutes and 32.25 seconds | too long! |
+| maze.scad: | 27.7x | 2.6 cores | 3.35 seconds | **5 minutes and 32.25 seconds** | 1 minute and 32.68 seconds |
 | menger.scad | 36.7x | 3.9 cores | 5.08 seconds | 3 minutes and 6.14 seconds | 4 minutes and 53.86 seconds |
+| minkowski-of-minkowski-difference.scad | **0.1x** | 0.5 cores | **9 minutes and 34.53 seconds** | 43.59 seconds | 3 minutes and 34.84 seconds |
 | scalemail.scad | 3.6x | 2.4 cores | 0.61 seconds | 2.17 seconds |  |
 | scalemail.scad:N=10 $fn=100 | 19.8x | 3.1 cores | 20.29 seconds | 6 minutes and 41.64 seconds |  |
 | scalemail.scad:N=10 $fn=20 | 15.1x | 2.7 cores | 2.01 seconds | 30.39 seconds |  |
@@ -82,8 +83,20 @@ These will be picked up automatically by `./bench scalemail.scad`
 
 Notes:
 *   Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in the stable releases).
-*   All timings are on a Mac M2 Max. Please let me know if you see significant speedup differences on other platforms.
+*   fast-csg has all the related options turned on: `fast-csg-remesh` (which keeps the # of faces in check by remeshing solids after each corefinement), `fast-csg-exact` and `fast-csg-exact-callbacks` (which force lazy numbers to exact after - or during - each operation), `fast-csg-trust-corefinement` (which tries corefinement even in edge cases where we know it might not work)
 *   All timings are on a Mac M2 Max (w/ a single run). Please let me know if you see significant speedup differences on other platforms.
+
+## Interpretation
+
+*   🎉 OpenSCAD+Manifold is 5-20x faster than OpenSCAD+fast-csg (CGAL corefinement w/ a Nef fallback). The reasons for that are many:
+    *   it doesn't use exact rationals (mere single-precision floats), which are slow *and* (in their lazy CGAL::Epeck wrappers) have suprising performance characteristics (which I tried to work around with all the exact-forcing options)
+    *   it's multithreaded (even though I didn't build w/ CUDA support, just w/ CPU multithreading using TBB), 
+    *   it does not fall back to Nef CSG operations. Well, ok, it does use Nefs to perform convex parts decomposition, and in case of exception it will fall back to Nef minkowski, but normal CSG ops are 100% handled by Manifold.
+*   ❌ One model is very slow (minkowski-of-minkowski-difference.scad), needs investigation! Lemme know if you find more!
+*   ⚠️ More testing (esp. re/ output quality) is needed! Besides normal bugs, there might be cases where the single precision bites, say, with lots of nested up/down scalings. I have plans to flatten the tree in https://github.com/openscad/openscad/pull/4561 to help deal with that.
+*   ⚠️ Manifold might be more picky with input meshes, rejecting more eagerly invalid geometry. Mostly a backwards compatibility issue, but maybe we could fix some meshes if that's too widespread an issue.
+*   🎉 Manifold is the way to go. It's fast (and will only get better, its code base seems to have room for more parallelism), allows for safe parallel algorithms (like the minkowski variant I've thrown in, which itself has room for more parallelism), and it seems to have more predictible performance than CGAL's corefinement (numbers above are single runs, but if you run with `RUNS=10 ./bench ...` you'll see the variance of fast-csg is much higher for some reason!).
+*   🎉 Some models are slower w/ fast-csg than nef. This could be because of Nef fallbacks, issues w/ my remeshing, high cost of forcing numbers to exact, etc. But Manifold crunches through these models for breakfast, so who cares?
 
 Some screenshots of the associated models (which source is below):
 
