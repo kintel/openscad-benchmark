@@ -2,6 +2,8 @@
 
 Benchmark scripts & results for the upcoming [Manifold](https://github.com/elalish/manifold) rendering engine support in [OpenSCAD](https://github.com/openscad/openscad) (https://github.com/openscad/openscad/pull/4533)
 
+TL;DR: [Jump to results already!](#results)
+
 For reference: [old benchmarks of fast-csg](https://gist.github.com/ochafik/2db96400e3c1f73558fcede990b8a355), which the Manifold backend might well soon replace!
 
 Note that minkowski operations get a specific boost thanks to the introduction of parallelism in the algorithm itself (and then the  union of parts it generates benefits from Manifold's own parallelism)
