@@ -60,8 +60,6 @@ These will be picked up automatically by `./bench scalemail.scad`
 
 ## Results
 
-Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in the stable releases).
-
 | File | Speed-up | CPU utilization | manifold | fast-csg | nef |
 |:-----|---------:|----------------:|---------:|---------:|----:|
 | examples/Parametric/candleStand.scad:small | 32.3x | 2.4 cores | 0.25 seconds | 49.16 seconds | 8.05 seconds |
@@ -76,7 +74,9 @@ Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in
 | scalemail.scad:N=2 $fn=100 | 5.3x | 3.5 cores | 9.25 seconds | 49.12 seconds |  |
 | scalemail.scad:N=2 $fn=20 | 3.5x | 2.3 cores | 0.61 seconds | 2.15 seconds |  |
 
-
+Notes:
+*   Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in the stable releases).
+*   All timings are on a Mac M2 Max. Please let me know if you see significant speedup differences on other platforms.
 
 Some screenshots of the associated models (which source is below):
 
