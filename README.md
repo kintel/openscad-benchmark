@@ -81,11 +81,18 @@ Speed-up is over the fastest of fast-csg and nef (nef = normal rendering used in
 Some screenshots of the associated models (which source is below):
 
 *   box-with-filleted-holes.scad
+
 <img width="675" alt="image" src="https://user-images.githubusercontent.com/273860/225524855-819b52fb-534a-4e63-ab97-74b21cb9893d.png">
+
 *   smoothed-cup.scad
-![image](https://user-images.githubusercontent.com/273860/225525640-b87aba18-10eb-42fb-8fa1-ad0a46590ea3.png)
+
+<img width="542" alt="image" src="https://user-images.githubusercontent.com/273860/225525640-b87aba18-10eb-42fb-8fa1-ad0a46590ea3.png">
+
 *   smoothed-antennas.scad: taken from [BOSL's docs](https://github.com/revarbat/BOSL2/wiki/Tutorial-Attachments#diffremove-keep), with extra minkowski and detail.
+
 <img width="542" alt="image" src="https://user-images.githubusercontent.com/273860/225692892-f7be9f4c-bff6-4032-a021-efc930a3882d.png">
+
 *   minkowski-of-minkowski-difference.scad: This isn't so fast, need to understand why
+
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
 
