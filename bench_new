@@ -5,24 +5,24 @@
 # ./bench foo.scad
 #
 set -euo pipefail
+set -x
 
 RUNS=${RUNS:-1}
 export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
 
-LIBS_DIR=${LIBS_DIR:-$PWD/libs}
-test -d "$LIBS_DIR" || ./get_libs
+#LIBS_DIR=${LIBS_DIR:-$PWD/libs}
+#test -d "$LIBS_DIR" || ./get_libs
 
-modes=( manifold )
-if [[ "${FASTCSG:-1}" == "1" ]]; then
-  modes+=( fastcsg )
-fi
-if [[ "${NEF:-0}" == "1" ]]; then
-  modes+=( nef )
-fi
+# What are we going to compare?
+# 1. a list of files + parameter variants
+# 2. a list of "modes" - how to select the modes? Separate mini-scripts, some arguments?
+# 3. default arguments
+
+vbo_modes=( none vbo-old vbo-new vbo-indexed )
 
 # Note: ~/Documents/OpenSCAD/libraries also on path on Mac
-export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
+#export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
 
 function join_by {
   local IFS="$1"
@@ -65,13 +65,15 @@ TIMESTAMP=$( date '+%Y%m%d-%H%M' )
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
+  --show-output
   -i
-  -L mode "$( join_by , "${modes[@]}" )"
+  -L mode "$( join_by , "${vbo_modes[@]}" )"
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
   # --export-markdown "$OUTPUT_PREFIX.md"
-  "./render {mode} '{file}'"
+#  "./render {mode} '{file}'"
+  "./png-export.sh -m preview -v {mode} '{file}'"
 )
 
 echo "# Output will go in $OUTPUT_PREFIX.json"

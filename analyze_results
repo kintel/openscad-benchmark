@@ -4,7 +4,7 @@
 
 import sys, json
 import itertools
-from humanfriendly import format_timespan
+from datetime import timedelta
 
 results = []
 
@@ -18,6 +18,15 @@ else:
     for file in files:
         with open(file) as f:
            results += json.load(f)["results"]
+
+modes = {r["parameters"]["mode"] for r in results}
+
+def format_timespan(seconds):
+    hours,remainder = divmod(seconds, 3600)
+    minutes,seconds = divmod(remainder, 60)
+    hour_str = f'{hours} hours, ' if hours > 0 else ''
+    minute_str = f'{minutes} minutes, ' if hours > 0 or minutes > 0 else ''
+    return hour_str + minute_str + f'{seconds:.2f} seconds'
 
 def get_file(r):
     return r["parameters"]["file"]
@@ -34,35 +43,10 @@ def get_cores(r):
     return (r["user"] + r["system"]) / r["mean"]
 
 def summarize(file, rs, md):
-    manifold = get_result_with_mode(rs, "manifold")
-    cores = '%.1f' % get_cores(get_result_with_mode(rs, "manifold"))
-    fastcsg = get_result_with_mode(rs, "fastcsg")
-    nef = get_result_with_mode(rs, "nef")
-    fastest_other = min(map(lambda x: x["mean"], filter(lambda x: x, [fastcsg, nef])), default=None)
-    faster = ''
-    if fastest_other:
-        faster = '%.1fx' % (fastest_other / manifold["mean"])
 
-    manifold_time = format_timespan(manifold["mean"])
-    fastcsg_time = ''
-    if fastcsg:
-        fastcsg_time = format_timespan(fastcsg["mean"])
-    nef_time = ''
-    if nef:
-        nef_time = format_timespan(nef["mean"])
+    mode_results = {mode: format_timespan(get_result_with_mode(rs, mode)["mean"]) for mode in modes}
 
-    if md:
-        return f'| {file} | {faster} | {cores} cores | {manifold_time} | {fastcsg_time} | {nef_time} |'
-    else:
-        lines=[
-            f'# {file}',
-            f'\tmanifold: {manifold_time} ({faster} faster, {cores} cores)',
-        ]
-        if fastcsg:
-            lines.append(f'\tfast-csg: {fastcsg_time}')
-        if nef:
-            lines.append(f'\tnef: {nef_time}')
-        return '\n'.join(lines)
+    return f'| ' + ' | '.join([str(v) for v in mode_results.values()]) + ' |'
 
 data = [
     (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
@@ -70,12 +54,7 @@ data = [
 
 # print(data)
 
-# if mode == "md":
-for md in [False, True]:
-    if md:
-        print('')
-        print('| File | Speed-up | CPU utilization | manifold | fast-csg | nef |')
-        print('|:-----|---------:|----------------:|---------:|---------:|----:|')
-        print('\n'.join([summarize(file, rs, md=True) for file, rs in data]) + '\n')
-    else:
-        print('\n\n'.join([summarize(file, rs, md=False) for file, rs in data]) + '\n')
+print('')
+print(f'| ' + ' | '.join([str(v) for v in modes]) + ' |')
+print('|' + '|'.join(['----' for v in modes]) +  '|')
+print('\n'.join([summarize(file, rs, md=True) for file, rs in data]) + '\n')
