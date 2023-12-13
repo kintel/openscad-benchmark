@@ -28,8 +28,8 @@ do
 done
 shift $((OPTIND - 1))
 
-echo "Render mode: $RENDER_MODE"
-echo "VBO mode: $VBO_MODE"
+#echo "Render mode: $RENDER_MODE"
+#echo "VBO mode: $VBO_MODE"
 
 INPUT_AND_PARAM_SET="${1:?Input file not set}"
 INPUT="$( echo "$INPUT_AND_PARAM_SET" | sed -E 's/^(.*):.*$/\1/' )"
@@ -84,12 +84,12 @@ case "$VBO_MODE" in
     ;;
   vbo-new)
     ARGS+=(
-      "--enable=vertex-object-renderers --enable=vertex-object-renderers-direct --enable=vertex-object-renderers-prealloc"
+      "--enable=vertex-object-renderers" "--enable=vertex-object-renderers-direct" "--enable=vertex-object-renderers-prealloc"
     )
     ;;
   vbo-indexed)
     ARGS+=(
-      "--enable=vertex-object-renderers --enable=vertex-object-renderers-indexed"
+      "--enable=vertex-object-renderers" "--enable=vertex-object-renderers-indexed"
     )
     ;;
   *)
@@ -97,4 +97,5 @@ case "$VBO_MODE" in
     exit 1
 esac
 
-$OPENSCAD "${ARGS[@]}" 2>&1 | tee "$OUTPUT_PREFIX.log"
+echo $OPENSCAD "${ARGS[@]}" > "$OUTPUT_PREFIX.log" 2>&1
+$OPENSCAD "${ARGS[@]}" >> "$OUTPUT_PREFIX.log" 2>&1

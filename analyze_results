@@ -19,7 +19,7 @@ else:
         with open(file) as f:
            results += json.load(f)["results"]
 
-modes = {r["parameters"]["mode"] for r in results}
+modes = sorted({r["parameters"]["mode"] for r in results})
 
 def format_timespan(seconds):
     hours,remainder = divmod(seconds, 3600)
@@ -46,7 +46,7 @@ def summarize(file, rs, md):
 
     mode_results = {mode: format_timespan(get_result_with_mode(rs, mode)["mean"]) for mode in modes}
 
-    return f'| ' + ' | '.join([str(v) for v in mode_results.values()]) + ' |'
+    return f'| {file} | ' + ' | '.join([str(v) for v in mode_results.values()]) + ' |'
 
 data = [
     (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
@@ -55,6 +55,6 @@ data = [
 # print(data)
 
 print('')
-print(f'| ' + ' | '.join([str(v) for v in modes]) + ' |')
-print('|' + '|'.join(['----' for v in modes]) +  '|')
+print('| File | ' + ' | '.join([str(v) for v in modes]) + ' |')
+print('|:-----|' + '|'.join(['----:' for v in modes]) +  '|')
 print('\n'.join([summarize(file, rs, md=True) for file, rs in data]) + '\n')
