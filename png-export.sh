@@ -12,17 +12,20 @@ set -euo pipefail
 
 printUsage()
 {
-  echo "Usage: $0 [-mv] <file.scad>[:<param-set>]"
+  echo "Usage: $0 [-mvf] <file.scad>[:<param-set>]"
   echo
   echo "  -m RENDER_MODE  preview | render | throwntogether"
   echo "  -v VBO_MODE     none | vbo-old | vbo-new | vbo-indexed"
+  echo "  -f NUM_FRAMES   Number of frames to render for each VBO prepare"
 }
 
-while getopts 'm:v:' c
+NUM_FRAMES=1
+while getopts 'm:v:f:' c
 do
   case $c in
     m) RENDER_MODE=${OPTARG};;
     v) VBO_MODE=${OPTARG};;
+    v) NUM_FRAMES=${OPTARG};;
     *) printUsage;exit 1;;
   esac
 done
@@ -47,6 +50,7 @@ OUTPUT_PREFIX="${OUTPUT_DIR}/${INPUT_NAME%.scad}-${RENDER_MODE}-${VBO_MODE}"
 ARGS=(
   "$INPUT"
   -o "$OUTPUT_PREFIX.png"
+  --num-frames $NUM_FRAMES
 )
 
 if [[ -n "$PARAM_SET" ]]; then

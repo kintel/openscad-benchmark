@@ -18,7 +18,9 @@ mkdir -p "$OUTPUT_DIR"
 # 2. a list of "modes" - how to select the modes? Separate mini-scripts, some arguments?
 # 3. default arguments
 
+# TODO: Turn this into a cmd-line arg
 vbo_modes=( none vbo-old vbo-new vbo-indexed )
+
 
 # Note: ~/Documents/OpenSCAD/libraries also on path on Mac
 #export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
