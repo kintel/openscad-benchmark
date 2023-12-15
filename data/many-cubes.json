@@ -1,0 +1,14 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "NUM=20": {
+            "NUM": "20"
+        },
+        "NUM=50": {
+            "NUM": "50"
+        },
+        "NUM=100": {
+            "NUM": "100"
+        }
+    }
+}
