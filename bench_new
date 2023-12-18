@@ -20,7 +20,9 @@ mkdir -p "$OUTPUT_DIR"
 
 # TODO: Turn this into a cmd-line arg
 vbo_modes=( none vbo-old vbo-new vbo-indexed )
-
+#num_frames=( 1 10 30 )
+num_frames=( 1 )
+render_modes=( preview )
 
 # Note: ~/Documents/OpenSCAD/libraries also on path on Mac
 #export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
@@ -68,13 +70,15 @@ OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 hyperfine_args=(
   --show-output
   -i
-  -L mode "$( join_by , "${vbo_modes[@]}" )"
+  -L vbo_mode "$( join_by , "${vbo_modes[@]}" )"
+  -L render_mode "$( join_by , "${render_modes[@]}" )"
+  -L num_frames "$( join_by , "${num_frames[@]}" )"
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
   # --export-markdown "$OUTPUT_PREFIX.md"
 #  "./render {mode} '{file}'"
-  "./png-export.sh -m preview -v {mode} '{file}'"
+  "./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
 )
 
 echo "# Output will go in $OUTPUT_PREFIX.json"

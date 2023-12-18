@@ -25,7 +25,7 @@ do
   case $c in
     m) RENDER_MODE=${OPTARG};;
     v) VBO_MODE=${OPTARG};;
-    v) NUM_FRAMES=${OPTARG};;
+    f) NUM_FRAMES=${OPTARG};;
     *) printUsage;exit 1;;
   esac
 done
