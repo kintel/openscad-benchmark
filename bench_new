@@ -85,6 +85,6 @@ echo "# Output will go in $OUTPUT_PREFIX.json"
 
 hyperfine "${hyperfine_args[@]}"
 
-./analyze_results "$OUTPUT_PREFIX.json"
+./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json"
 # ./analyze_results human "$OUTPUT_PREFIX.json"
 # ./analyze_results md "$OUTPUT_PREFIX.json" > $OUTPUT_PREFIX.md
