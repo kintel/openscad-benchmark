@@ -63,7 +63,6 @@ OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
   --show-output
-  -i
   -L vbo_mode "$( join_by , "${vbo_modes[@]}" )"
   -L render_mode "$( join_by , "${render_modes[@]}" )"
   -L num_frames "$( join_by , "${num_frames[@]}" )"
