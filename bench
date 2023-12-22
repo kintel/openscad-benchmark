@@ -61,7 +61,7 @@ else
   OUTPUT_NAME="${OUTPUT_NAME_PREFIX}-${#files[@]}-variants"
 fi
 
-TIMESTAMP=$( gdate '+%Y%m%d-%H%M' )
+TIMESTAMP=$( date '+%Y%m%d-%H%M' )
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
