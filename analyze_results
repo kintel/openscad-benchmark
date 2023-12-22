@@ -2,56 +2,9 @@
 # Copyright 2021 Google LLC.
 # SPDX-License-Identifier: Apache-2.00
 
-# "results": [
-#     {
-#       "command": "./png-export.sh -m preview -v none -f 1 'data/colorful-spheres.scad'",
-#       "mean": 0.07571806604,
-#       "stddev": 0.026249299955593636,
-#       "median": 0.07571806604,
-#       "user": 0.04228598,
-#       "system": 0.033688499999999996,
-#       "min": 0.057157008040000006,
-#       "max": 0.09427912404000001,
-#       "times": [
-#         0.09427912404000001,
-#         0.057157008040000006
-#       ],
-#       "exit_codes": [
-#         0,
-#         0
-#       ],
-    #   "parameters": {
-    #     "file": "data/colorful-spheres.scad",
-    #     "num_frames": "1",
-    #     "render_mode": "preview",
-    #     "vbo_mode": "none"
-    #   }
-#     },
-
-# This needs to be rewritten:
-# * Essentially, we want to build a multi-dimensional table of results
-# * Dimensions are the parameters:
-#   o Required parameter: file >= 1
-#   o One more required parameter > 1
-#   o If two or more parameters are > 1, we have a multi-dimensional result
-# * Presentation as MD, CSV etc.
-#   o Split dimensions for 2D presentation
-#   o Select Y dimension? (default/hardcoded to "file")
-#   o Select X dimension
-#   o All other dimensions will be output as separate X-Y tables
-#   o Q: Are there any reason for using other than "file" as Y dimension? e.g. to illustrate # frames vs. VBO mode?
-
-# TODO:
-# * Parse JSON and create multi-dim array
-# * Output in MD format with hardcoded dimensions
-# * Add cmd-line args to select dimension labels
-# * Output in CSV format
-# * Output to file instead of stdout
-
 import sys, json
 import itertools
-from datetime import timedelta
-from collections import defaultdict
+from humanfriendly import format_timespan
 
 results = []
 
@@ -66,80 +19,63 @@ else:
         with open(file) as f:
            results += json.load(f)["results"]
 
-vbo_modes = sorted({r["parameters"]["vbo_mode"] for r in results})
+def get_file(r):
+    return r["parameters"]["file"]
+def get_mode(r):
+    return r["parameters"]["mode"]
 
-parameters = defaultdict(set)
-for result in results:
-    for param_name,param_value in result["parameters"].items():
-        parameters[param_name].add(param_value)
-#print(parameters)
+def get_result_with_mode(rs, mode):
+    matches = list(filter(lambda r: get_mode(r) == mode, rs))
+    if len(matches) == 0:
+        return None
+    return matches[0]
 
-sorted_parameters = {
-    key: sorted(list(value)) for key,value in parameters.items()
-}
-print(sorted_parameters)
+def get_cores(r):
+    return (r["user"] + r["system"]) / r["mean"]
 
-sorted_parameter_names = sorted(parameters.keys())
+def summarize(file, rs, md):
+    manifold = get_result_with_mode(rs, "manifold")
+    cores = '%.1f' % get_cores(get_result_with_mode(rs, "manifold"))
+    fastcsg = get_result_with_mode(rs, "fastcsg")
+    nef = get_result_with_mode(rs, "nef")
+    fastest_other = min(map(lambda x: x["mean"], filter(lambda x: x, [fastcsg, nef])), default=None)
+    faster = ''
+    if fastest_other:
+        faster = '%.1fx' % (fastest_other / manifold["mean"])
 
-def parameter_dict_to_tuple(parameters):
-    return tuple(parameters[name] for name in sorted_parameter_names)
+    manifold_time = format_timespan(manifold["mean"])
+    fastcsg_time = ''
+    if fastcsg:
+        fastcsg_time = format_timespan(fastcsg["mean"])
+    nef_time = ''
+    if nef:
+        nef_time = format_timespan(nef["mean"])
 
-value_dict = {}
-for result in results:
-    parameter_tuple = tuple(result["parameters"][name] for name in sorted_parameter_names)
-    value_dict[parameter_tuple] = result
+    if md:
+        return f'| {file} | {faster} | {cores} cores | {manifold_time} | {fastcsg_time} | {nef_time} |'
+    else:
+        lines=[
+            f'# {file}',
+            f'\tmanifold: {manifold_time} ({faster} faster, {cores} cores)',
+        ]
+        if fastcsg:
+            lines.append(f'\tfast-csg: {fastcsg_time}')
+        if nef:
+            lines.append(f'\tnef: {nef_time}')
+        return '\n'.join(lines)
 
-#print(f'Example: {value_dict[("data/colorful-spheres.scad", "1", "preview", "none")]}')
+data = [
+    (file, list(rs)) for file, rs in itertools.groupby(sorted(results, key=get_file), get_file)
+]
 
-# TODO: Requires files to be > 0
-#files = parameters.pop('file')
-#print(files)
+# print(data)
 
-multi_parameters = list(filter(lambda item: item[0] != 'file' and len(item[1]) >= 2, sorted_parameters.items()))
-print(multi_parameters)
-
-if len(multi_parameters) > 1:
-    print("Only one parameter set is supported")
-    sys.exit(1)
-
-if len(multi_parameters) == 0:
-    print("No parameter set found")
-    sys.exit(1)
-
-def format_timespan(seconds):
-    hours,remainder = divmod(seconds, 3600)
-    minutes,seconds = divmod(remainder, 60)
-    hour_str = f'{hours} hours, ' if hours > 0 else ''
-    minute_str = f'{minutes} minutes, ' if hours > 0 or minutes > 0 else ''
-    return hour_str + minute_str + f'{seconds:.2f} seconds'
-
-#
-# iteration order
-# 1. single parameters
-# 2. future multiple parameters
-# 3. files
-# 4. main parameter
-
-#main_parameter = <find>
-#file_parameter = 'file'
-
-#ordered_parameter_names = ["render_mode", "num_frames", "file", "vbo_mode"]
-
-def generate_table(x_axis, y_axis, rest = {}):
-    paramdict = rest.copy()
-    rows = []
-    for row_parameter in sorted_parameters[y_axis]:
-        paramdict[y_axis] = row_parameter
-        cols = []
-        for col_parameter in sorted_parameters[x_axis]:
-            paramdict[x_axis] = col_parameter
-            param_tuple = parameter_dict_to_tuple(paramdict)
-            cols.append(format_timespan(value_dict[param_tuple]["mean"]))
-        rows.append(cols)
-    return rows
-
-rows = generate_table(x_axis='vbo_mode', y_axis='file', rest = {"render_mode": "preview", "num_frames": "1"})
-print('| File | ' + ' | '.join(sorted_parameters["vbo_mode"]) + ' |')
-print('|:-----|' + '|'.join(['----:' for v in range(len(sorted_parameters["vbo_mode"]))]) +  '|')
-for i in range(len(sorted_parameters["file"])):
-    print(f'| {sorted_parameters["file"][i]} | ' + ' | '.join(rows[i]) + ' |')
+# if mode == "md":
+for md in [False, True]:
+    if md:
+        print('')
+        print('| File | Speed-up | CPU utilization | manifold | fast-csg | nef |')
+        print('|:-----|---------:|----------------:|---------:|---------:|----:|')
+        print('\n'.join([summarize(file, rs, md=True) for file, rs in data]) + '\n')
+    else:
+        print('\n\n'.join([summarize(file, rs, md=False) for file, rs in data]) + '\n')
