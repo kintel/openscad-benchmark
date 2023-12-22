@@ -3,10 +3,7 @@
 # SPDX-License-Identifier: Apache-2.00
 #
 # Usage
-#   ./render (preview|render|throwntogether) file.scad [parameter-set-name]
-#
-# New Usage
-#   ./render -m (preview|render|throwntogether) -v (none,vbo-old,vbo-new,vbo-indexed) file.scad[:<param-set>]
+#   ./png-export.sh -m (preview|render|throwntogether) -v (none,vbo-old,vbo-new,vbo-indexed) file.scad[:<param-set>]
 #
 set -euo pipefail
 
@@ -37,8 +34,6 @@ shift $((OPTIND - 1))
 INPUT_AND_PARAM_SET="${1:?Input file not set}"
 INPUT="$( echo "$INPUT_AND_PARAM_SET" | sed -E 's/^(.*):.*$/\1/' )"
 PARAM_SET="$( echo "$INPUT_AND_PARAM_SET" | sed -E 's/^[^:]*:?(.*)$/\1/' )"
-
-OPENSCAD=${OPENSCAD:-$HOME/code/OpenSCAD/openscad/build/OpenSCAD.app/Contents/MacOS/OpenSCAD}
 
 OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
