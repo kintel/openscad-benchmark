@@ -1,14 +1,13 @@
-# OpenSCAD + Manifold = ❤️
+# OpenSCAD Benchmarking
 
-Benchmark scripts & results for the upcoming [Manifold](https://github.com/elalish/manifold) rendering engine support in [OpenSCAD](https://github.com/openscad/openscad) (https://github.com/openscad/openscad/pull/4533)
+This repo contains scripts for benchmarking select OpenSCAD features.
+Each benchmark feature currently has its own small top-level script, which generally calls into the main benchmarking tools.
 
-TL;DR: [Jump to results already!](#results)
+## Geometry evaluation
 
-For reference: [old benchmarks of fast-csg](https://gist.github.com/ochafik/2db96400e3c1f73558fcede990b8a355), which the Manifold backend might well soon replace!
+This compares performance of the CGAL, fast-csg and Manifold geometry backends.
 
-Note that minkowski operations get a specific boost thanks to the introduction of parallelism in the algorithm itself (and then the  union of parts it generates benefits from Manifold's own parallelism)
-
-## Running the benchmarks yourself on your own files
+### Running the benchmarks yourself on your own files
 
 ```bash
 export OPENSCAD=$PWD/OpenSCAD.app/Contents/MacOS/OpenSCAD
@@ -62,7 +61,7 @@ You can generate custom parameter sets with the following helper:
 
 These will be picked up automatically by `./bench_geom.sh scalemail.scad`
 
-## Results
+### Results
 
 | File | Speed-up | CPU utilization | manifold | fast-csg | nef |
 |:-----|---------:|----------------:|---------:|---------:|----:|
@@ -89,7 +88,7 @@ Notes:
 *   fast-csg has all the related options turned on: `fast-csg-remesh` (which keeps the # of faces in check by remeshing solids after each corefinement), `fast-csg-exact` and `fast-csg-exact-callbacks` (which force lazy numbers to exact after - or during - each operation), `fast-csg-trust-corefinement` (which tries corefinement even in edge cases where we know it might not work)
 *   All timings are on a Mac M2 Max (w/ a single run). Please let me know if you see significant speedup differences on other platforms.
 
-## Interpretation
+### Interpretation
 
 *   🎉 OpenSCAD+Manifold is 5-30x faster than OpenSCAD+fast-csg (CGAL corefinement w/ a Nef fallback). The reasons for that are many:
     *   it doesn't use exact rationals (mere single-precision floats), which are slow *and* (in their lazy CGAL::Epeck wrappers) have suprising performance characteristics (which I tried to work around with all the exact-forcing options)
@@ -119,3 +118,63 @@ Some screenshots of the associated models (which source is below):
 
 <img width="520" alt="image" src="https://user-images.githubusercontent.com/273860/225530675-75e1ea6e-bb0d-4c39-897c-89c119b0e12d.png">
 
+## VBO Rendering (single frame)
+
+This compares performance of the the various VBO rendering experimental features vs. the default (non-VBO) rendering.
+The test itself measures the full OpenSCAD time for generating a single PNG frame.
+
+The purpose of the test is to benchmark time to render the first preview frame, and to catch regressions in frame setup time.
+
+TODO: Measure both preview, throwntogether and render(Manifold)
+
+**Running**
+
+```
+OPENSCAD=path/to/openscad RUNS=2 ./bench_vbo.sh data/vbo-tests/*.scad
+```
+
+**Results**
+
+Columns:
+* **none:** Default rendering (no VBOs)
+* **vbo-indexed:** vbo-new, but with indexed VBOs
+* **vbo-old:** --enable=vertex-object-renderers
+* **vbo-new:** --enable=vertex-object-renderers --enable=vertex-object-renderers-direct --enable=vertex-object-renderers-prealloc
+
+
+For these results, we're mostly interested in validating that **vbo-new** is comparable to or better than **none**.
+
+| File | none | vbo-indexed | vbo-new | vbo-old |
+|:-----|----:|----:|----:|----:|
+| data/vbo-tests/colorful-spheres.scad | 0.07 seconds | 0.06 seconds | 0.06 seconds | 0.06 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=10 | 0.27 seconds | 0.46 seconds | 0.38 seconds | 0.46 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=20 | 0.08 seconds | 0.10 seconds | 0.09 seconds | 0.10 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=5 | 1.61 seconds | 1.60 seconds | 1.60 seconds | 1.61 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.15 seconds | 0.23 seconds | 0.15 seconds | 0.23 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 0.48 seconds | 0.77 seconds | 0.40 seconds | 0.77 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 1.73 seconds | 2.91 seconds | 1.42 seconds | 2.91 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 11.86 seconds | 21.30 seconds | 8.85 seconds | 21.33 seconds |
+| data/vbo-tests/large-sphere.scad | 0.04 seconds | 0.04 seconds | 0.04 seconds | 0.04 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.27 seconds | 1.00 seconds | 0.64 seconds | 1.00 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=200 | 0.05 seconds | 0.08 seconds | 0.07 seconds | 0.08 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=2000 | 1.26 seconds | 4.59 seconds | 3.16 seconds | 4.58 seconds |
+| data/vbo-tests/many-cubes.scad | 0.06 seconds | 0.07 seconds | 0.06 seconds | 0.07 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=100 | 8.45 seconds | 8.45 seconds | 8.47 seconds | 8.44 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=20 | 0.13 seconds | 0.21 seconds | 0.18 seconds | 0.21 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=50 | 1.10 seconds | 1.10 seconds | 1.09 seconds | 1.10 seconds |
+| data/vbo-tests/many-spheres.scad | 0.14 seconds | 1.23 seconds | 0.55 seconds | 1.23 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=1000 | 0.86 seconds | 11.90 seconds | 5.04 seconds | 11.89 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=200 | 0.22 seconds | 2.39 seconds | 1.03 seconds | 2.40 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=500 | 0.46 seconds | 6.24 seconds | 2.49 seconds | 5.99 seconds |
+
+## VBO Rendering (multiple frames)
+
+This test renders multiple frames after a single frame setup. The time includes full OpenSCAD processing time as well; it's very similar to the "single frame" variant, except it just calls `GLView::render()`` a number of times in succession. 
+
+TODO: Test preview vs. throwntogether vs. render(Manifold)
+
+**Running**
+
+```
+OPENSCAD=path/to/openscad RUNS=2 FIXME.sh data/vbo-tests/*.scad
+```
