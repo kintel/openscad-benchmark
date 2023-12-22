@@ -18,8 +18,8 @@ git clone https://gist.github.com/ochafik/70a6b15e982b7ccd5a79ff9afd99dbcf opens
 cd openscad-manifold-benchmarks
 ./get_libs # Will fetch lots of common libs
 
-RUNS=5 ./bench bolts.scad
-# ./bench *.scad 
+RUNS=5 ./bench_geom.sh data/geom-tests/bolts.scad
+# ./bench-geom.sh *.scad 
 ```
 
 Each run outputs a timestamped JSON results file. Multiple files can be merge-analyzed to generate a markdown table and human summary:
@@ -60,7 +60,7 @@ You can generate custom parameter sets with the following helper:
 }
 ```
 
-These will be picked up automatically by `./bench scalemail.scad`
+These will be picked up automatically by `./bench_geom.sh scalemail.scad`
 
 ## Results
 
@@ -98,7 +98,7 @@ Notes:
 *   ❌ One model is surprisingly not improving (minkowski-of-minkowski-difference.scad), needs investigation! Lemme know if you find more like this!
 *   ⚠️ More testing (esp. re/ output quality) is needed! Besides normal bugs, there might be cases where the single precision bites, say, with lots of nested up/down scalings. I have plans to flatten the tree in https://github.com/openscad/openscad/pull/4561 to help deal with that.
 *   ⚠️ Manifold might be more picky with input meshes, rejecting more eagerly invalid geometry. Mostly a backwards compatibility issue, but maybe we could fix some meshes if that's too widespread an issue.
-*   🎉 Manifold is the way to go. It's fast (and will only get better, its code base seems to have room for more parallelism), allows for safe parallel algorithms (like the minkowski variant I've thrown in, which itself has room for more parallelism), and it seems to have more predictible performance than CGAL's corefinement (numbers above are single runs, but if you run with `RUNS=10 ./bench ...` you'll see the variance of fast-csg is much higher for some reason!).
+*   🎉 Manifold is the way to go. It's fast (and will only get better, its code base seems to have room for more parallelism), allows for safe parallel algorithms (like the minkowski variant I've thrown in, which itself has room for more parallelism), and it seems to have more predictible performance than CGAL's corefinement (numbers above are single runs, but if you run with `RUNS=10 ./bench-geom.sh ...` you'll see the variance of fast-csg is much higher for some reason!).
 *   🎉 Some models are slower w/ fast-csg than nef. This could be because of Nef fallbacks, issues w/ my remeshing, high cost of forcing numbers to exact, etc. But Manifold crunches through these models for breakfast, so who cares?
 
 Some screenshots of the associated models (which source is below):
