@@ -3,6 +3,13 @@
 This repo contains scripts for benchmarking select OpenSCAD features.
 Each benchmark feature currently has its own small top-level script, which generally calls into the main benchmarking tools.
 
+## Common scripts
+
+TODO:
+* analyze_results.py
+* gen_param_sets
+
+
 ## Geometry evaluation
 
 This compares performance of the CGAL, fast-csg and Manifold geometry backends.
@@ -125,7 +132,10 @@ The test itself measures the full OpenSCAD time for generating a single PNG fram
 
 The purpose of the test is to benchmark time to render the first preview frame, and to catch regressions in frame setup time.
 
-TODO: Measure both preview, throwntogether and render(Manifold)
+TODO:
+* Go through tests and eliminate tests with very similar performance
+* Measure both preview, throwntogether and render(Manifold)
+* Linux vs. macOS
 
 **Running**
 
@@ -171,7 +181,10 @@ For these results, we're mostly interested in validating that **vbo-new** is com
 
 This test renders multiple frames after a single frame setup. The time includes full OpenSCAD processing time as well; it's very similar to the "single frame" variant, except it just calls `GLView::render()`` a number of times in succession. 
 
-TODO: Test preview vs. throwntogether vs. render(Manifold)
+TODO:
+* Go through tests and eliminate tests with very similar performance
+* Test preview vs. throwntogether vs. render(Manifold)
+* Linux vs. macOS
 
 **Running**
 
