@@ -10,22 +10,16 @@ RUNS=${RUNS:-1}
 export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
 
-#LIBS_DIR=${LIBS_DIR:-$PWD/libs}
-#test -d "$LIBS_DIR" || ./get_libs
+LIBS_DIR=${LIBS_DIR:-$PWD/libs}
+test -d "$LIBS_DIR" || ./get_libs
 
-# What are we going to compare?
-# 1. a list of files + parameter variants
-# 2. a list of "modes" - how to select the modes? Separate mini-scripts, some arguments?
-# 3. default arguments
-
-# TODO: Turn this into a cmd-line arg
+# TODO: Turn this into a cmd-line arg instead of using multiple top-level bench_*.sh scripts
 vbo_modes=( none vbo-old vbo-new vbo-indexed )
-#num_frames=( 1 10 30 )
 num_frames=( 1 )
 render_modes=( preview )
 
 # Note: ~/Documents/OpenSCAD/libraries also on path on Mac
-#export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
+export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
 
 function join_by {
   local IFS="$1"
@@ -76,8 +70,6 @@ hyperfine_args=(
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
-  # --export-markdown "$OUTPUT_PREFIX.md"
-#  "./render {mode} '{file}'"
   "./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
 )
 
@@ -86,5 +78,3 @@ echo "# Output will go in $OUTPUT_PREFIX.json"
 hyperfine "${hyperfine_args[@]}"
 
 ./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json"
-# ./analyze_results human "$OUTPUT_PREFIX.json"
-# ./analyze_results md "$OUTPUT_PREFIX.json" > $OUTPUT_PREFIX.md
