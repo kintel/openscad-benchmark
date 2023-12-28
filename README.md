@@ -189,5 +189,29 @@ TODO:
 **Running**
 
 ```
-OPENSCAD=path/to/openscad RUNS=2 FIXME.sh data/vbo-tests/*.scad
+OPENSCAD=path/to/openscad RUNS=2 bench_vbo_num_frames.sh data/numframes-tests/*.scad
 ```
+
+**Results**
+
+| File | none | vbo-indexed | vbo-new | vbo-old |
+|:-----|----:|----:|----:|----:|
+| data/numframes-tests/colorful-spheres.scad | 0.11 seconds | 0.09 seconds | 0.08 seconds | 0.08 seconds |
+| data/numframes-tests/colorful-spheres.scad:step=10 | 0.88 seconds | 0.78 seconds | 0.74 seconds | 0.82 seconds |
+| data/numframes-tests/colorful-spheres.scad:step=20 | 0.15 seconds | 0.14 seconds | 0.14 seconds | 0.14 seconds |
+| data/numframes-tests/colorful-spheres.scad:step=5 | 1.71 seconds | 1.61 seconds | 1.61 seconds | 1.61 seconds |
+| data/numframes-tests/cube-with-half-spheres-dents.scad | 5.34 seconds | 0.28 seconds | 0.24 seconds | 0.31 seconds |
+| data/numframes-tests/cube-with-half-spheres-dents.scad:N=10 | 24.12 seconds | 0.92 seconds | 0.71 seconds | 0.93 seconds |
+| data/numframes-tests/cube-with-half-spheres-dents.scad:N=20 | 1.0 minutes, 39.16 seconds | 3.61 seconds | 2.75 seconds | 3.61 seconds |
+| data/numframes-tests/large-sphere.scad | 0.07 seconds | 0.04 seconds | 0.05 seconds | 0.04 seconds |
+| data/numframes-tests/large-sphere.scad:$fn=1000 | 2.55 seconds | 0.87 seconds | 0.67 seconds | 0.88 seconds |
+| data/numframes-tests/large-sphere.scad:$fn=200 | 0.15 seconds | 0.08 seconds | 0.07 seconds | 0.08 seconds |
+| data/numframes-tests/large-sphere.scad:$fn=2000 | 10.56 seconds | 4.26 seconds | 3.26 seconds | 4.12 seconds |
+| data/numframes-tests/many-cubes.scad | 0.11 seconds | 0.09 seconds | 0.09 seconds | 0.09 seconds |
+| data/numframes-tests/many-cubes.scad:NUM=100 | 8.59 seconds | 8.55 seconds | 8.49 seconds | 8.45 seconds |
+| data/numframes-tests/many-cubes.scad:NUM=20 | 0.40 seconds | 0.35 seconds | 0.33 seconds | 0.34 seconds |
+| data/numframes-tests/many-cubes.scad:NUM=50 | 1.10 seconds | 1.10 seconds | 1.10 seconds | 1.17 seconds |
+| data/numframes-tests/many-spheres.scad | 3.99 seconds | 1.03 seconds | 0.62 seconds | 1.04 seconds |
+| data/numframes-tests/many-spheres.scad:NUM=1000 | 39.44 seconds | 9.95 seconds | 5.75 seconds | 10.32 seconds |
+| data/numframes-tests/many-spheres.scad:NUM=200 | 8.01 seconds | 2.00 seconds | 1.16 seconds | 2.00 seconds |
+| data/numframes-tests/many-spheres.scad:NUM=500 | 19.65 seconds | 5.14 seconds | 2.80 seconds | 5.17
