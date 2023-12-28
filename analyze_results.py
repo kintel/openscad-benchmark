@@ -10,7 +10,7 @@ from collections import defaultdict
 parser = argparse.ArgumentParser(
   prog='analyze_results',
   description='This script analyzes results from hyperfine benchmark runs')
-parser.add_argument('filename')
+parser.add_argument('filenames', type=str, nargs='+')
 parser.add_argument('--row-field', type=str, required=True, help='Hyperfine parameter name for output rows')
 parser.add_argument('--col-field', type=str, required=True, help='Hyperfine parameter name for output columns')
 
@@ -21,9 +21,12 @@ def format_timespan(seconds):
     minute_str = f'{minutes} minutes, ' if hours > 0 or minutes > 0 else ''
     return hour_str + minute_str + f'{seconds:.2f} seconds'
 
-def get_results(filename):
-  with open(filename) as f:
-    return json.load(f)["results"]
+def get_results(filenames):
+  results = []
+  for filename in filenames:
+    with open(filename) as f:
+      results += json.load(f)["results"]
+  return results
 
 # Returns a dict: {param_name: [sorted list of parameter values]}
 def get_parameters(results):
@@ -78,7 +81,7 @@ def generate_table(parameters, value_dict, row_field, col_field, rest = {}):
 
 def main():
   args = parser.parse_args()
-  results = get_results(args.filename)
+  results = get_results(args.filenames)
   parameters = get_parameters(results)
   value_dict = get_value_dict(results, parameters)
 
