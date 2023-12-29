@@ -68,7 +68,7 @@ You can generate custom parameter sets with the following helper:
 
 These will be picked up automatically by `./bench_geom.sh scalemail.scad`
 
-### Results
+### Linux Results
 
 | File | Speed-up | CPU utilization | manifold | fast-csg | nef |
 |:-----|---------:|----------------:|---------:|---------:|----:|
@@ -143,7 +143,7 @@ TODO:
 OPENSCAD=path/to/openscad RUNS=2 ./bench_vbo.sh data/vbo-tests/*.scad
 ```
 
-**Results**
+**Linux Results**
 
 Columns:
 * **none:** Default rendering (no VBOs)
@@ -176,6 +176,31 @@ For these results, we're mostly interested in validating that **vbo-new** is com
 | data/vbo-tests/many-spheres.scad:NUM=1000 | 0.86 seconds | 9.25 seconds | 5.04 seconds | 9.26 seconds |
 | data/vbo-tests/many-spheres.scad:NUM=200 | 0.22 seconds | 1.87 seconds | 1.03 seconds | 1.87 seconds |
 | data/vbo-tests/many-spheres.scad:NUM=500 | 0.46 seconds | 4.62 seconds | 2.48 seconds | 4.64 seconds |
+
+**macOS Results**
+
+| File | none | vbo-indexed | vbo-new | vbo-old |
+|:-----|----:|----:|----:|----:|
+| data/vbo-tests/colorful-spheres.scad | 0.37 seconds | 41.46 seconds | 0.50 seconds | 50.66 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=10 | 1.04 seconds | Timed out | 2.05 seconds | Timed out |
+| data/vbo-tests/colorful-spheres.scad:step=20 | 0.50 seconds | Timed out | 0.90 seconds | Timed out |
+| data/vbo-tests/colorful-spheres.scad:step=5 | 3.61 seconds | Timed out | 8.24 seconds | Timed out |
+| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.64 seconds | 16.11 seconds | 0.30 seconds | 17.36 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 2.16 seconds | Timed out | 0.74 seconds | Timed out |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 8.10 seconds | Timed out | 2.54 seconds | Timed out |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 50.58 seconds | Timed out | 16.13 seconds | Timed out |
+| data/vbo-tests/large-sphere.scad | 0.13 seconds | 0.13 seconds | 0.11 seconds | 0.13 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.59 seconds | Timed out | 0.96 seconds | Timed out |
+| data/vbo-tests/large-sphere.scad:$fn=200 | 0.13 seconds | 2.64 seconds | 0.15 seconds | 2.65 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=2000 | 2.42 seconds | Timed out | 4.41 seconds | Timed out |
+| data/vbo-tests/many-cubes.scad | 0.16 seconds | 0.91 seconds | 0.17 seconds | 0.90 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=20 | 0.25 seconds | 6.17 seconds | 0.45 seconds | 6.19 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=50 | 1.85 seconds | Timed out | 4.64 seconds | Timed out |
+| data/vbo-tests/many-spheres.scad | 0.57 seconds | Timed out | 0.98 seconds | Timed out |
+| data/vbo-tests/many-spheres.scad:NUM=1000 | 4.46 seconds | Timed out | 8.78 seconds | Timed out |
+| data/vbo-tests/many-spheres.scad:NUM=200 | 1.00 seconds | Timed out | 1.99 seconds | Timed out |
+| data/vbo-tests/many-spheres.scad:NUM=500 | 2.44 seconds | Timed out | 4.42 seconds | Timed out |
+
 
 ## VBO Rendering (multiple frames)
 
