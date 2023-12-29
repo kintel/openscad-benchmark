@@ -39,13 +39,14 @@ OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
 
 INPUT_NAME=$( basename "$INPUT" )
-OUTPUT_PREFIX="${OUTPUT_DIR}/${INPUT_NAME%.scad}-${RENDER_MODE}-${VBO_MODE}"
+OUTPUT_PREFIX="${OUTPUT_DIR}/${INPUT_NAME%.scad}:${PARAM_SET:+${PARAM_SET}}-${RENDER_MODE}-${VBO_MODE}"
 
 
 ARGS=(
   "$INPUT"
   -o "$OUTPUT_PREFIX.png"
   --num-frames $NUM_FRAMES
+  --csglimit 1000000
 )
 
 if [[ -n "$PARAM_SET" ]]; then
