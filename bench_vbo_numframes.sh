@@ -63,6 +63,7 @@ TIMESTAMP=$( date '+%Y%m%d-%H%M' )
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
+  -i
   --show-output
   -L vbo_mode "$( join_by , "${vbo_modes[@]}" )"
   -L render_mode "$( join_by , "${render_modes[@]}" )"
