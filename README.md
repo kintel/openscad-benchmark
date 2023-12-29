@@ -156,26 +156,26 @@ For these results, we're mostly interested in validating that **vbo-new** is com
 
 | File | none | vbo-indexed | vbo-new | vbo-old |
 |:-----|----:|----:|----:|----:|
-| data/vbo-tests/colorful-spheres.scad | 0.07 seconds | 0.06 seconds | 0.06 seconds | 0.06 seconds |
-| data/vbo-tests/colorful-spheres.scad:step=10 | 0.27 seconds | 0.46 seconds | 0.38 seconds | 0.46 seconds |
-| data/vbo-tests/colorful-spheres.scad:step=20 | 0.08 seconds | 0.10 seconds | 0.09 seconds | 0.10 seconds |
-| data/vbo-tests/colorful-spheres.scad:step=5 | 1.61 seconds | 1.60 seconds | 1.60 seconds | 1.61 seconds |
-| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.15 seconds | 0.23 seconds | 0.15 seconds | 0.23 seconds |
-| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 0.48 seconds | 0.77 seconds | 0.40 seconds | 0.77 seconds |
-| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 1.73 seconds | 2.91 seconds | 1.42 seconds | 2.91 seconds |
-| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 11.86 seconds | 21.30 seconds | 8.85 seconds | 21.33 seconds |
-| data/vbo-tests/large-sphere.scad | 0.04 seconds | 0.04 seconds | 0.04 seconds | 0.04 seconds |
-| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.27 seconds | 1.00 seconds | 0.64 seconds | 1.00 seconds |
-| data/vbo-tests/large-sphere.scad:$fn=200 | 0.05 seconds | 0.08 seconds | 0.07 seconds | 0.08 seconds |
-| data/vbo-tests/large-sphere.scad:$fn=2000 | 1.26 seconds | 4.59 seconds | 3.16 seconds | 4.58 seconds |
+| data/vbo-tests/colorful-spheres.scad | 0.13 seconds | 0.44 seconds | 0.28 seconds | 0.45 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=10 | 0.40 seconds | 1.98 seconds | 1.09 seconds | 1.76 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=20 | 0.16 seconds | 0.84 seconds | 0.48 seconds | 0.81 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=5 | 2.03 seconds | 5.09 seconds | 3.78 seconds | 5.11 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.16 seconds | 0.20 seconds | 0.15 seconds | 0.20 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 0.47 seconds | 0.61 seconds | 0.40 seconds | 0.61 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 1.71 seconds | 2.25 seconds | 1.41 seconds | 2.25 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 11.75 seconds | 16.96 seconds | 8.63 seconds | 17.06 seconds |
+| data/vbo-tests/large-sphere.scad | 0.05 seconds | 0.05 seconds | 0.04 seconds | 0.04 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.27 seconds | 0.85 seconds | 0.64 seconds | 0.85 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=200 | 0.06 seconds | 0.08 seconds | 0.07 seconds | 0.08 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=2000 | 1.26 seconds | 3.96 seconds | 3.13 seconds | 3.97 seconds |
 | data/vbo-tests/many-cubes.scad | 0.06 seconds | 0.07 seconds | 0.06 seconds | 0.07 seconds |
-| data/vbo-tests/many-cubes.scad:NUM=100 | 8.45 seconds | 8.45 seconds | 8.47 seconds | 8.44 seconds |
-| data/vbo-tests/many-cubes.scad:NUM=20 | 0.13 seconds | 0.21 seconds | 0.18 seconds | 0.21 seconds |
-| data/vbo-tests/many-cubes.scad:NUM=50 | 1.10 seconds | 1.10 seconds | 1.09 seconds | 1.10 seconds |
-| data/vbo-tests/many-spheres.scad | 0.14 seconds | 1.23 seconds | 0.55 seconds | 1.23 seconds |
-| data/vbo-tests/many-spheres.scad:NUM=1000 | 0.86 seconds | 11.90 seconds | 5.04 seconds | 11.89 seconds |
-| data/vbo-tests/many-spheres.scad:NUM=200 | 0.22 seconds | 2.39 seconds | 1.03 seconds | 2.40 seconds |
-| data/vbo-tests/many-spheres.scad:NUM=500 | 0.46 seconds | 6.24 seconds | 2.49 seconds | 5.99 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=100 | 9.38 seconds | 18.07 seconds | 15.24 seconds | 18.05 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=20 | 0.13 seconds | 0.20 seconds | 0.18 seconds | 0.20 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=50 | 1.21 seconds | 2.29 seconds | 1.93 seconds | 2.29 seconds |
+| data/vbo-tests/many-spheres.scad | 0.14 seconds | 0.97 seconds | 0.56 seconds | 0.96 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=1000 | 0.86 seconds | 9.25 seconds | 5.04 seconds | 9.26 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=200 | 0.22 seconds | 1.87 seconds | 1.03 seconds | 1.87 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=500 | 0.46 seconds | 4.62 seconds | 2.48 seconds | 4.64 seconds |
 
 ## VBO Rendering (multiple frames)
 
