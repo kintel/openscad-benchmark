@@ -13,8 +13,10 @@ parser = argparse.ArgumentParser(
 parser.add_argument('filenames', type=str, nargs='+')
 parser.add_argument('--row-field', type=str, required=True, help='Hyperfine parameter name for output rows')
 parser.add_argument('--col-field', type=str, required=True, help='Hyperfine parameter name for output columns')
+parser.add_argument('--timeout', type=int, required=False, default=9999, help='Number of seconds for which a test is considered timed out')
 
-def format_timespan(seconds):
+def format_timespan(seconds, timeout):
+    if seconds >= timeout: return 'Timed out'
     hours,remainder = divmod(seconds, 3600)
     minutes,seconds = divmod(remainder, 60)
     hour_str = f'{hours} hours, ' if hours > 0 else ''
@@ -66,7 +68,7 @@ def parameter_dict_to_tuple(parameters):
   sorted_parameter_names = get_sorted_parameter_names(parameters)
   return tuple(parameters[name] for name in sorted_parameter_names)
 
-def generate_table(parameters, value_dict, row_field, col_field, rest = {}):
+def generate_table(parameters, value_dict, row_field, col_field, timeout, rest = {}):
     paramdict = rest.copy()
     rows = []
     for row_parameter in parameters[row_field]:
@@ -75,7 +77,7 @@ def generate_table(parameters, value_dict, row_field, col_field, rest = {}):
         for col_parameter in parameters[col_field]:
             paramdict[col_field] = col_parameter
             param_tuple = parameter_dict_to_tuple(paramdict)
-            cols.append(format_timespan(value_dict[param_tuple]["mean"]))
+            cols.append(format_timespan(value_dict[param_tuple]["mean"], timeout=timeout))
         rows.append(cols)
     return rows
 
@@ -90,7 +92,7 @@ def main():
   # We currently only support two varying dimensions
   assert(not multi_parameters)
 
-  rows = generate_table(parameters, value_dict, col_field=args.col_field, row_field=args.row_field, rest=rest_parameters)
+  rows = generate_table(parameters, value_dict, col_field=args.col_field, row_field=args.row_field, rest=rest_parameters, timeout=args.timeout)
   print('| File | ' + ' | '.join(parameters[args.col_field]) + ' |')
   print('|:-----|' + '|'.join(['----:' for v in range(len(parameters[args.col_field]))]) +  '|')
   for i in range(len(parameters[args.row_field])):

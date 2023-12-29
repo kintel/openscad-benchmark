@@ -6,20 +6,15 @@
 #
 set -euo pipefail
 
+TIMEOUT=60
 RUNS=${RUNS:-1}
 export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
-
-LIBS_DIR=${LIBS_DIR:-$PWD/libs}
-test -d "$LIBS_DIR" || ./get_libs
 
 # TODO: Turn this into a cmd-line arg instead of using multiple top-level bench_*.sh scripts
 vbo_modes=( none vbo-old vbo-new vbo-indexed )
 num_frames=( 1 )
 render_modes=( preview )
-
-# Note: ~/Documents/OpenSCAD/libraries also on path on Mac
-export OPENSCADPATH=$LIBS_DIR:${OPENSCADPATH:-}
 
 function join_by {
   local IFS="$1"
@@ -62,6 +57,7 @@ TIMESTAMP=$( date '+%Y%m%d-%H%M' )
 OUTPUT_PREFIX="$OUTPUT_DIR/$OUTPUT_NAME-$TIMESTAMP"
 
 hyperfine_args=(
+  -i
   --show-output
   -L vbo_mode "$( join_by , "${vbo_modes[@]}" )"
   -L render_mode "$( join_by , "${render_modes[@]}" )"
@@ -69,11 +65,11 @@ hyperfine_args=(
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
-  "./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
+  "timeout ${TIMEOUT}s ./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
 )
 
 echo "# Output will go in $OUTPUT_PREFIX.json"
 
 hyperfine "${hyperfine_args[@]}"
 
-./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json"
+./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json" --timeout=${TIMEOUT}

@@ -6,6 +6,7 @@
 #
 set -euo pipefail
 
+TIMEOUT=120
 RUNS=${RUNS:-1}
 export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
@@ -69,11 +70,11 @@ hyperfine_args=(
   -L file "$( join_by , "${files[@]}" )"
   --runs "$RUNS"
   --export-json "$OUTPUT_PREFIX.json"
-  "./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
+  "timeout ${TIMEOUT}s ./png-export.sh -m {render_mode} -v {vbo_mode} -f {num_frames} '{file}'"
 )
 
 echo "# Output will go in $OUTPUT_PREFIX.json"
 
 hyperfine "${hyperfine_args[@]}"
 
-./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json"
+./analyze_results.py --row-field=file --col-field=vbo_mode "$OUTPUT_PREFIX.json" --timeout=${TIMEOUT}
