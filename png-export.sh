@@ -75,16 +75,9 @@ case "$RENDER_MODE" in
 esac
 
 case "$VBO_MODE" in
-  none)
-    ;;
-  vbo-old)
-    ARGS+=(
-      "--enable=vertex-object-renderers"
-    )
-    ;;
   vbo-new)
     ARGS+=(
-      "--enable=vertex-object-renderers" "--enable=vertex-object-renderers-direct" "--enable=vertex-object-renderers-prealloc"
+      "--enable=vertex-object-renderers"
     )
     ;;
   vbo-indexed)

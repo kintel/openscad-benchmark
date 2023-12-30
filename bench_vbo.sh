@@ -12,7 +12,7 @@ export OUTPUT_DIR=${OUTPUT_DIR:-$PWD/out}
 mkdir -p "$OUTPUT_DIR"
 
 # TODO: Turn this into a cmd-line arg instead of using multiple top-level bench_*.sh scripts
-vbo_modes=( none vbo-old vbo-new vbo-indexed )
+vbo_modes=( vbo-new vbo-indexed )
 num_frames=( 1 )
 render_modes=( preview )
 
