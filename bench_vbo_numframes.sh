@@ -15,7 +15,7 @@ LIBS_DIR=${LIBS_DIR:-$PWD/libs}
 test -d "$LIBS_DIR" || ./get_libs
 
 # TODO: Turn this into a cmd-line arg instead of using multiple top-level bench_*.sh scripts
-vbo_modes=( none vbo-old vbo-new vbo-indexed )
+vbo_modes=( vbo-new vbo-indexed )
 num_frames=( 50 )
 render_modes=( preview )
 

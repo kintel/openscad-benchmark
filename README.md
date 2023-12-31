@@ -177,6 +177,31 @@ For these results, we're mostly interested in validating that **vbo-new** is com
 | data/vbo-tests/many-spheres.scad:NUM=200 | 0.22 seconds | 1.87 seconds | 1.03 seconds | 1.87 seconds |
 | data/vbo-tests/many-spheres.scad:NUM=500 | 0.46 seconds | 4.62 seconds | 2.48 seconds | 4.64 seconds |
 
+**New Linux Results**
+
+| File | vbo-indexed | vbo-new |
+|:-----|----:|----:|
+| data/vbo-tests/colorful-spheres.scad | 0.28 seconds | 0.29 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=10 | 1.14 seconds | 1.15 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=20 | 0.50 seconds | 0.50 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=5 | 3.94 seconds | 3.93 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.15 seconds | 0.15 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 0.42 seconds | 0.42 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 1.47 seconds | 1.49 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 9.00 seconds | 9.02 seconds |
+| data/vbo-tests/large-sphere.scad | 0.04 seconds | 0.05 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.70 seconds | 0.69 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=200 | 0.07 seconds | 0.07 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=2000 | 3.33 seconds | 3.36 seconds |
+| data/vbo-tests/many-cubes.scad | 0.07 seconds | 0.06 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=100 | 15.71 seconds | 15.71 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=20 | 0.19 seconds | 0.18 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=50 | 1.99 seconds | 2.00 seconds |
+| data/vbo-tests/many-spheres.scad | 0.58 seconds | 0.58 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=1000 | 5.49 seconds | 5.29 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=200 | 1.09 seconds | 1.09 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=500 | 2.59 seconds | 2.59 seconds |
+
 **macOS Results**
 
 | File | none | vbo-indexed | vbo-new | vbo-old |
@@ -240,6 +265,31 @@ OPENSCAD=path/to/openscad RUNS=2 bench_vbo_num_frames.sh data/numframes-tests/*.
 | data/numframes-tests/many-spheres.scad:NUM=1000 | 39.98 seconds | 17.36 seconds | 5.67 seconds | 17.51 seconds |
 | data/numframes-tests/many-spheres.scad:NUM=200 | 7.95 seconds | 3.52 seconds | 1.15 seconds | 3.55 seconds |
 | data/numframes-tests/many-spheres.scad:NUM=500 | 19.68 seconds | 8.73 seconds | 2.80 seconds | 8.77 seconds |
+
+**New Linux Results**
+
+| File | vbo-indexed | vbo-new |
+|:-----|----:|----:|
+| data/vbo-tests/colorful-spheres.scad | 0.28 seconds | 0.29 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=10 | 1.14 seconds | 1.15 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=20 | 0.50 seconds | 0.50 seconds |
+| data/vbo-tests/colorful-spheres.scad:step=5 | 3.94 seconds | 3.93 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad | 0.15 seconds | 0.15 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=10 | 0.42 seconds | 0.42 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=20 | 1.47 seconds | 1.49 seconds |
+| data/vbo-tests/cube-with-half-spheres-dents.scad:N=50 | 9.00 seconds | 9.02 seconds |
+| data/vbo-tests/large-sphere.scad | 0.04 seconds | 0.05 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=1000 | 0.70 seconds | 0.69 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=200 | 0.07 seconds | 0.07 seconds |
+| data/vbo-tests/large-sphere.scad:$fn=2000 | 3.33 seconds | 3.36 seconds |
+| data/vbo-tests/many-cubes.scad | 0.07 seconds | 0.06 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=100 | 15.71 seconds | 15.71 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=20 | 0.19 seconds | 0.18 seconds |
+| data/vbo-tests/many-cubes.scad:NUM=50 | 1.99 seconds | 2.00 seconds |
+| data/vbo-tests/many-spheres.scad | 0.58 seconds | 0.58 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=1000 | 5.49 seconds | 5.29 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=200 | 1.09 seconds | 1.09 seconds |
+| data/vbo-tests/many-spheres.scad:NUM=500 | 2.59 seconds | 2.59 seconds |
 
 **macOS Results**
 
