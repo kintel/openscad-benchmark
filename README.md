@@ -245,22 +245,22 @@ OPENSCAD=path/to/openscad RUNS=2 bench_vbo_num_frames.sh data/numframes-tests/*.
 
 | File | none | vbo-indexed | vbo-new | vbo-old |
 |:-----|----:|----:|----:|----:|
-| data/numframes-tests/colorful-spheres.scad | 0.44 seconds | 5.77 seconds | 0.29 seconds | 5.77 seconds |
-| data/numframes-tests/colorful-spheres.scad:step=10 | 8.00 seconds | Timed out | 3.95 seconds | Timed out |
-| data/numframes-tests/colorful-spheres.scad:step=20 | 1.12 seconds | 17.07 seconds | 0.61 seconds | 17.13 seconds |
-| data/numframes-tests/colorful-spheres.scad:step=5 | 1.0 minutes, 2.76 seconds | Timed out | 30.55 seconds | Timed out |
-| data/numframes-tests/cube-with-half-spheres-dents.scad | 24.26 seconds | 1.0 minutes, 4.51 seconds | 1.25 seconds | 1.0 minutes, 4.61 seconds |
-| data/numframes-tests/cube-with-half-spheres-dents.scad:N=10 | 1.0 minutes, 45.14 seconds | Timed out | 4.67 seconds | Timed out |
-| data/numframes-tests/cube-with-half-spheres-dents.scad:N=20 | Timed out | Timed out | 17.99 seconds | Timed out |
-| data/numframes-tests/large-sphere.scad | 0.13 seconds | 0.15 seconds | 0.12 seconds | 0.15 seconds |
-| data/numframes-tests/large-sphere.scad:$fn=1000 | 13.54 seconds | Timed out | 1.13 seconds | Timed out |
-| data/numframes-tests/large-sphere.scad:$fn=200 | 0.65 seconds | 10.20 seconds | 0.17 seconds | 10.20 seconds |
-| data/numframes-tests/large-sphere.scad:$fn=2000 | 53.73 seconds | Timed out | 4.47 seconds | Timed out |
-| data/numframes-tests/many-cubes.scad | 0.26 seconds | 3.23 seconds | 0.24 seconds | 3.23 seconds |
+| data/numframes-tests/colorful-spheres.scad | 8.75 seconds | Timed out | 0.60 seconds | Timed out |
+| data/numframes-tests/colorful-spheres.scad:step=10 | 30.05 seconds | Timed out | 3.24 seconds | Timed out |
+| data/numframes-tests/colorful-spheres.scad:step=20 | 16.41 seconds | Timed out | 1.02 seconds | Timed out |
+| data/numframes-tests/colorful-spheres.scad:step=5 | 1.0 minutes, 0.25 seconds | Timed out | 16.57 seconds | Timed out |
+| data/numframes-tests/cube-with-half-spheres-dents.scad | 24.51 seconds | 1.0 minutes, 6.86 seconds | 1.23 seconds | 1.0 minutes, 7.08 seconds |
+| data/numframes-tests/cube-with-half-spheres-dents.scad:N=10 | 1.0 minutes, 39.75 seconds | Timed out | 4.40 seconds | Timed out |
+| data/numframes-tests/cube-with-half-spheres-dents.scad:N=20 | Timed out | Timed out | 16.16 seconds | Timed out |
+| data/numframes-tests/large-sphere.scad | 0.15 seconds | 0.17 seconds | 0.14 seconds | 0.17 seconds |
+| data/numframes-tests/large-sphere.scad:$fn=1000 | 13.49 seconds | Timed out | 1.03 seconds | Timed out |
+| data/numframes-tests/large-sphere.scad:$fn=200 | 0.66 seconds | 10.17 seconds | 0.17 seconds | 10.14 seconds |
+| data/numframes-tests/large-sphere.scad:$fn=2000 | 54.19 seconds | Timed out | 4.65 seconds | Timed out |
+| data/numframes-tests/many-cubes.scad | 0.27 seconds | 3.26 seconds | 0.23 seconds | 3.28 seconds |
 | data/numframes-tests/many-cubes.scad:NUM=100 | Timed out | Timed out | Timed out | Timed out |
-| data/numframes-tests/many-cubes.scad:NUM=20 | 1.14 seconds | 24.80 seconds | 0.93 seconds | 24.88 seconds |
-| data/numframes-tests/many-cubes.scad:NUM=50 | 16.05 seconds | Timed out | 12.47 seconds | Timed out |
-| data/numframes-tests/many-spheres.scad | 21.23 seconds | Timed out | 1.36 seconds | Timed out |
-| data/numframes-tests/many-spheres.scad:NUM=1000 | Timed out | Timed out | 12.04 seconds | Timed out |
-| data/numframes-tests/many-spheres.scad:NUM=200 | 42.45 seconds | Timed out | 2.58 seconds | Timed out |
-| data/numframes-tests/many-spheres.scad:NUM=500 | 1.0 minutes, 46.40 seconds | Timed out | 6.26 seconds | Timed out |
+| data/numframes-tests/many-cubes.scad:NUM=20 | 1.16 seconds | 25.48 seconds | 0.98 seconds | 27.29 seconds |
+| data/numframes-tests/many-cubes.scad:NUM=50 | 16.37 seconds | Timed out | 12.40 seconds | Timed out |
+| data/numframes-tests/many-spheres.scad | 21.84 seconds | Timed out | 1.35 seconds | Timed out |
+| data/numframes-tests/many-spheres.scad:NUM=1000 | Timed out | Timed out | 11.99 seconds | Timed out |
+| data/numframes-tests/many-spheres.scad:NUM=200 | 47.73 seconds | Timed out | 2.54 seconds | Timed out |
+| data/numframes-tests/many-spheres.scad:NUM=500 | 1.0 minutes, 44.38 seconds | Timed out | 6.08 seconds | Timed out |
